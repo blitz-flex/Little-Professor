@@ -26,10 +26,11 @@ function palyGame() {
     let score = 0;
     
     // Loop 10 times to generate and solve 10 problems
-    for (let i = 0; i< 100; i++){
+    for (let i = 0; i< 10; i++){
         // Generate two random numbers based on the difficulty level
         const N1 = generatRandNum(level);
         const N2 = generatRandNum(level);
+        //Calculates the correct answer to the problem.
         let correctAnswer = N1 + N2;
         let attemps = 0;
         
