@@ -37,7 +37,7 @@ function generateRandomOperation() {
     }
     
     return {
-      problem: `${num1} ${operation} ${num2} =`,
+      problem: `${num1} ${operation} ${num2} `,
       answer: correctAnswer
     };
     }
