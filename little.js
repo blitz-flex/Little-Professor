@@ -56,7 +56,7 @@ function palyGame() {
         // Loop until the user answers correctly or reaches 3 attempts
 
         do {
-            const userAnswer = prompt(`${problem} = `);
+            const userAnswer = prompt(`${problem}= `);
             // Check if the user's answer is correct
             if (parseInt(userAnswer) === answer) {
                 score++;
@@ -67,7 +67,7 @@ function palyGame() {
 
                 // If it's the third attempt, print the correct answer
                 if (attemps === 3) {
-                  console.log(`${problem}  ${answer}`);
+                  console.log(`${problem}= ${answer}` );
                 }
             }
         }while (attemps < 3);
