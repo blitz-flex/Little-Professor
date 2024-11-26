@@ -49,29 +49,25 @@ function palyGame() {
     
     // Loop 10 times to generate and solve 10 problems
     for (let i = 0; i< 5; i++){
-        // Generate two random numbers based on the difficulty level
-        const N1 = generatRandNum(level);
-        const N2 = generatRandNum(level);
-        //Calculates the correct answer to the problem.
-        let correctAnswer = N1 + N2;
+        
+        const { problem, answer } = generateRandomProblem(level);
         let attemps = 0;
         
         // Loop until the user answers correctly or reaches 3 attempts
 
         do {
-            const userAnswer = prompt(`${N1} + ${N2} = `);
+            const userAnswer = prompt(`${problem} = `);
             // Check if the user's answer is correct
-            if (userAnswer === correctAnswer.toString()) {
+            if (parseInt(userAnswer) === answer) {
                 score++;
                 break;
             }   else {
-      
-          console.log("EEE");
+                console.log("EEE");
                 attemps++;
 
                 // If it's the third attempt, print the correct answer
                 if (attemps === 3) {
-                  console.log(`${N1} + ${N2} = ${correctAnswer}`);
+                  console.log(`${problem}  ${answer}`);
                 }
             }
         }while (attemps < 3);
