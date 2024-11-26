@@ -19,14 +19,36 @@ function generatRandNum(level) {
         return Math.floor(Math.random() * 20);
     } 
 }
-
+function generateRandomOperation() {
+    const operations = ["+", "-"]; // Add subtraction to the operations array
+    return operations[Math.floor(Math.random() * operations.length)];
+    }
+    
+    function generateRandomProblem(level) {
+    const num1 = generatRandNum(level);
+    const num2 = generatRandNum(level);
+    const operation = generateRandomOperation();
+    
+    let correctAnswer;
+    if (operation === "+") {
+      correctAnswer = num1 + num2;
+    } else if (operation === "-") {
+      correctAnswer = num1 - num2;
+    }
+    
+    return {
+      problem: `${num1} ${operation} ${num2} =`,
+      answer: correctAnswer
+    };
+    }
+    
 
 function palyGame() {
     const level = littProf();
     let score = 0;
     
     // Loop 10 times to generate and solve 10 problems
-    for (let i = 0; i< 10; i++){
+    for (let i = 0; i< 5; i++){
         // Generate two random numbers based on the difficulty level
         const N1 = generatRandNum(level);
         const N2 = generatRandNum(level);
