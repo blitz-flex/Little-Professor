@@ -1,6 +1,6 @@
 function littProf() {
     let level;
-    
+
     // Loop until the user enters a valid level (1, 2, or 3)
     do {
         level = prompt("select level: ");
@@ -19,3 +19,41 @@ function generatRandNum(level) {
         return Math.floor(Math.random() * 20);
     } 
 }
+
+
+function palyGame() {
+    const level = littProf();
+    let score = 0;
+    
+    // Loop 10 times to generate and solve 10 problems
+    for (let i = 0; i< 100; i++){
+        // Generate two random numbers based on the difficulty level
+        const N1 = generatRandNum(level);
+        const N2 = generatRandNum(level);
+        let correctAnswer = N1 + N2;
+        let attemps = 0;
+        
+        // Loop until the user answers correctly or reaches 3 attempts
+
+        do {
+            const userAnswer = prompt(`${N1} + ${N2} = `);
+            // Check if the user's answer is correct
+            if (userAnswer === correctAnswer.toString()) {
+                score++;
+                break;
+            }   else {
+      
+          console.log("EEE");
+                attemps++;
+
+                // If it's the third attempt, print the correct answer
+                if (attemps === 3) {
+                  console.log(`${N1} + ${N2} = ${correctAnswer}`);
+                }
+            }
+        }while (attemps < 3);
+    }  
+    console.log(`Score: ${score}`);
+}
+
+palyGame();
