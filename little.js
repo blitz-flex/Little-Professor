@@ -20,7 +20,7 @@ function generatRandNum(level) {
     } 
 }
 function generateRandomOperation() {
-    const operations = ["+", "-"]; // Add subtraction to the operations array
+    const operations = ["+", "-", "*", "/"]; // Add subtraction to the operations array
     return operations[Math.floor(Math.random() * operations.length)];
     }
     
@@ -34,7 +34,14 @@ function generateRandomOperation() {
       correctAnswer = num1 + num2;
     } else if (operation === "-") {
       correctAnswer = num1 - num2;
+    } else if (operation === "*"){
+      correctAnswer = num1 * num2;
+    } else if (operation === "/"){
+      correctAnswer = num1 / num2;
     }
+          
+      
+    
     
     return {
       problem: `${num1} ${operation} ${num2} `,
