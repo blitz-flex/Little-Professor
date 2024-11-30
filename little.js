@@ -37,12 +37,11 @@ function generateRandomOperation() {
     } else if (operation === "*"){
       correctAnswer = num1 * num2;
     } else if (operation === "/"){
-      correctAnswer = num1 / num2;
+      while (num2 === 0) {
+      num2 = generateRandNum(level);
     }
-          
-      
-    
-    
+    correctAnswer = num1 / num2;
+  }
     return {
       problem: `${num1} ${operation} ${num2} `,
       answer: correctAnswer
@@ -55,7 +54,7 @@ function palyGame() {
     let score = 0;
     
     // Loop 10 times to generate and solve 10 problems
-    for (let i = 0; i< 5; i++){
+    for (let i = 0; i< 10; i++){
         
         const { problem, answer } = generateRandomProblem(level);
         let attemps = 0;
