@@ -16,3 +16,43 @@ body {
     width: 360px;
     text-align: center;
 }
+
+h1 {
+    font-size: 30px;
+    color: #3f51b5;
+    margin-bottom: 30px;
+}
+
+.score, .selected-level {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.problem {
+    font-size: 24px;
+    margin-bottom: 30px;
+    color: #3f51b5;
+  
+}
+
+.feedback {
+    font-size: 18px;
+    margin-top: 15px;
+    color: #333;
+}
+
+.correct {
+    color: green;
+    font-weight: bold;
+}
+
+.incorrect {
+    color: red;
+    font-weight: bold;
+}
+
+.game-over {
+    color: #f44336;
+    font-weight: bold;
+}
