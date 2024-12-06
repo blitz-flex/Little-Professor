@@ -1,13 +1,8 @@
-function littProf() {
-  let level;
-
-  // Loop until the user enters a valid level (1, 2, or 3)
-  do {
-      level = prompt("select level: ");
-  }   while (level !== "1" && level !== "2" && level !== "3")
-  // Convert the level string to an integer and return it
-  return parseInt(level);
-}
+let score = 0;
+        let currentProblem;
+        let currentAnswer;
+        let currentAttempts = 0;
+        let totalQuestions = 10;
 
 function generatRandNum(level) {
   if (level == 1) return Math.floor(Math.random() * 10);
@@ -19,11 +14,11 @@ function generateRandomOperation() {
   const operations = ["+", "-", "*", "/"]; // Add subtraction to the operations array
   return operations[Math.floor(Math.random() * operations.length)];
   }
-  
+   
   
   function generateRandomProblem(level) {
   const num1 = generatRandNum(level);
-  const num2 = generatRandNum(level);
+  let num2 = generatRandNum(level);
   const operation = generateRandomOperation();
   
   let correctAnswer;
@@ -33,19 +28,18 @@ function generateRandomOperation() {
     correctAnswer = num1 - num2;
   } else if (operation === "*"){
     correctAnswer = num1 * num2;
-  } else if (operation === "/"){
-    while (num2 === 0) {
+  } else {
+    while (num2 === 0) 
     num2 = generateRandNum(level);
+    correctAnswer = Math.floor(num1 /num2);
   }
-  correctAnswer = num1 / num2;
-}
+    
   return {
     problem: `${num1} ${operation} ${num2} `,
-    answer: correctAnswer
+    answer: correctAnswer,
   };
   }
   
-
 function palyGame() {
   const level = littProf();
   let score = 0;
