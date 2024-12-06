@@ -41,16 +41,41 @@ function generateRandomOperation() {
   }
   
 function palyGame() {
-  const level = littProf();
-  let score = 0;
-  
-  // Loop 10 times to generate and solve 10 problems
-  for (let i = 0; i< 10; i++){
-      
+  score = 0;
+            currentAttempts = 0;
+            totalQuestions = 10;
+
+            // Hide the "Start" button and the "Select level" dropdown
+            document.getElementById("start").style.display = "none";
+            document.getElementById("level").style.display = "none"; // Hide the level selector
+            document.getElementById("answer").disabled = false;
+            document.getElementById("submit").disabled = false;
+            document.querySelector(".score").textContent = `Score: 0`;
+            document.querySelector(".feedback").textContent = "";
+
+            // Get the selected level and display it on the screen
+            const level = document.getElementById("level").value;
+            document.querySelector(".selected-level").textContent = `Level: ${level}`;
+            
+            generateProblem(parseInt(level));
+        }
+
+generateRandomProblem(level);
+      if (totalQuestions === 0) {
+        endGame();
+        return;
+      }
       const { problem, answer } = generateRandomProblem(level);
-      let attemps = 0;
+      currentProblem = problem;
+      currentAnswer = answer;
+      currentAttempts = 0;
+      totalQuestions--;
+
+            document.querySelector(".problem").textContent = `Solve: ${problem}`;
+            document.getElementById("answer").value = "";
+        }
       
-      // Loop until the user answers correctly or reaches 3 attempts
+      
 
       do {
           const userAnswer = prompt(`${problem}= `);
