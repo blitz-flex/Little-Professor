@@ -40,8 +40,8 @@ function generateRandomOperation() {
   };
   }
   
-function palyGame() {
-  score = 0;
+function startGame() {
+            score = 0;
             currentAttempts = 0;
             totalQuestions = 10;
 
@@ -60,41 +60,54 @@ function palyGame() {
             generateProblem(parseInt(level));
         }
 
-generateRandomProblem(level);
-      if (totalQuestions === 0) {
-        endGame();
-        return;
-      }
-      const { problem, answer } = generateRandomProblem(level);
-      currentProblem = problem;
-      currentAnswer = answer;
-      currentAttempts = 0;
-      totalQuestions--;
+        function generateProblem(level) {
+            if (totalQuestions === 0) {
+                endGame();
+                return;
+            }
+
+            const { problem, answer } = generateRandomProblem(level);
+            currentProblem = problem;
+            currentAnswer = answer;
+            currentAttempts = 0;
+            totalQuestions--;
 
             document.querySelector(".problem").textContent = `Solve: ${problem}`;
             document.getElementById("answer").value = "";
         }
-      
-      
 
-      do {
-          const userAnswer = prompt(`${problem}= `);
-          // Check if the user's answer is correct
-          if (parseInt(userAnswer) === answer) {
-              score++;
-              break;
-          }   else {
-              console.log("EEE");
-              attemps++;
+        function submitAnswer() {
+            const userAnswer = parseInt(document.getElementById("answer").value);
+            const feedbackElement = document.querySelector(".feedback");
 
-              // If it's the third attempt, print the correct answer
-              if (attemps === 3) {
-                console.log(`${problem}= ${answer}` );
-              }
-          }
-      }while (attemps < 3);
-  }  
-  console.log(`Score: ${score}`);
-}
+            if (userAnswer === currentAnswer) {
+                score++;
+                feedbackElement.textContent = "Correct!";
+                feedbackElement.className = "feedback correct";
+                const level = parseInt(document.getElementById("level").value);
+                generateProblem(level);
+            } else {
+                currentAttempts++;
+                feedbackElement.textContent = `Incorrect! Try again (${3 - currentAttempts} attempts left).`;
+                feedbackElement.className = "feedback incorrect";
 
-palyGame();
+                if (currentAttempts === 3) {
+                    feedbackElement.textContent = `Incorrect! The correct answer was ${currentAnswer}.`;
+                    const level = parseInt(document.getElementById("level").value);
+                    generateProblem(level);
+                }
+            }
+
+            document.querySelector(".score").textContent = `Score: ${score}`;
+        }
+
+        function endGame() {
+            document.getElementById("answer").disabled = true;
+            document.getElementById("submit").disabled = true;
+            document.querySelector(".problem").textContent = "Game Over!";
+            document.querySelector(".feedback").classList.add("game-over");
+            document.querySelector(".feedback").textContent = `Final Score: ${score} / 10`;
+            document.getElementById("start").style.display = "block"; // Show "Start" button again for replay
+            document.getElementById("level").style.display = "block"; // Show level selector again for replay
+            document.querySelector(".selected-level").textContent = ""; // Clear the displayed level
+        }  
