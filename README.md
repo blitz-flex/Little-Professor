@@ -31,5 +31,5 @@ The Little Professor game is an educational and entertaining math challenge desi
 
 This game is perfect for students, parents, or anyone looking to sharpen their math skills while having fun. Will you rise to the challenge and ace all the levels?
 
-# Test App
+## Test App
 [Little Profesor ](https://blitz-flex.github.io/Little-Professor/)
