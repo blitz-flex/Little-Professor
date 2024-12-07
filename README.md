@@ -20,8 +20,6 @@ The Little Professor game is an educational and entertaining math challenge desi
 
 * Game Over: The game concludes after 10 questions, displaying the player's final score and feedback.
 
-
-
 ## How to Play:
 
 * Select a difficulty level from the dropdown menu.
@@ -33,11 +31,5 @@ The Little Professor game is an educational and entertaining math challenge desi
 
 This game is perfect for students, parents, or anyone looking to sharpen their math skills while having fun. Will you rise to the challenge and ace all the levels?
 
-
-
-
-
-# ტესტ აპპ
-
-
+# Test App
 [Little Profesor ](https://blitz-flex.github.io/Little-Professor/)
