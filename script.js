@@ -16,28 +16,34 @@ function generateRandomOperation() {
 }
 
 function generateRandomProblem(level) {
-    const num1 = generatRandNum(level);
-    let num2 = generatRandNum(level);
-    const operation = generateRandomOperation();
+  const num1 = generatRandNum(level);
+  let num2 = generatRandNum(level);
+  const operation = generateRandomOperation();
 
-    let correctAnswer;
-    if (operation === "+") {
-        correctAnswer = num1 + num2;
-    } else if (operation === "-") {
-        correctAnswer = num1 - num2;
-    } else if (operation === "*") {
-        correctAnswer = num1 * num2;
-    } else {
-        while (num2 === 0 || num1 % num2 !== 0) {
-            num2 = generatRandNum(level); // Ensure valid division
-        }
-        correctAnswer = num1 / num2;
+  let correctAnswer;
+  if (operation === "+") {
+    correctAnswer = num1 + num2;
+  } else if (operation === "-") {
+    // Ensure subtraction results in positive numbers
+    while (num1 <= num2) {
+      num1 = generatRandNum(level);
+      num2 = generatRandNum(level);
     }
+    correctAnswer = num1 - num2;
+  } else if (operation === "*") {
+    correctAnswer = num1 * num2;
+  } else {
+    // Ensure division results in positive integers and no remainders
+    while (num2 === 0 || num1 % num2 !== 0) {
+      num2 = generatRandNum(level);
+    }
+    correctAnswer = num1 / num2;
+  }
 
-    return {
-        problem: `${num1} ${operation} ${num2}`,
-        answer: correctAnswer,
-    };
+  return {
+    problem: `${num1} ${operation} ${num2}`,
+    answer: correctAnswer,
+  };
 }
 
 function startGame() {
@@ -122,4 +128,33 @@ function endGame() {
     document.getElementById("start").style.display = "block";
     document.getElementById("level").style.display = "block";
     document.querySelector(".selected-level").textContent = ""; // Clear displayed level
+}function generateRandomProblem(level) {
+  const num1 = generatRandNum(level);
+  let num2 = generatRandNum(level);
+  const operation = generateRandomOperation();
+
+  let correctAnswer;
+  if (operation === "+") {
+    correctAnswer = num1 + num2;
+  } else if (operation === "-") {
+    // Ensure subtraction results in positive numbers
+    while (num1 <= num2) {
+      num1 = generatRandNum(level);
+      num2 = generatRandNum(level);
+    }
+    correctAnswer = num1 - num2;
+  } else if (operation === "*") {
+    correctAnswer = num1 * num2;
+  } else {
+    // Ensure division results in positive integers and no remainders
+    while (num2 === 0 || num1 % num2 !== 0) {
+      num2 = generatRandNum(level);
+    }
+    correctAnswer = num1 / num2;
+  }
+
+  return {
+    problem: `${num1} ${operation} ${num2}`,
+    answer: correctAnswer,
+  };
 }
