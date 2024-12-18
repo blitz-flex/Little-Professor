@@ -1,11 +1,35 @@
-# Little Professor
 
-[Little Professor" by Texas Instruments](https://youtu.be/ZuJwzH9BIgs?si=vHdYxDB7JH-Ip2ly)
+# Game Description: Little Professor
+The Little Professor game is an educational and entertaining math challenge designed to improve arithmetic skills for players of all ages. It provides a fun way to practice addition, subtraction, and multiplication through randomized math problems, with three levels of difficulty to suit various skill levels.
 
-As a child, David's one of the first toys was "Little Professor", a calculator that posed ten different math problems for David. If the toy displayed 4 + 0 =, David would write 4, and for 4 + 1 =, he would write 5. If David gave an incorrect answer, the toy would display "EEE". Finally, after three incorrect answers for the same calculation, the toy would simply show the correct answer (e.g., 4 + 0 = 4 or 4 + 1 = 5).
-Write a program that:
 
- - Prompts the user to choose a game level. If the user does not enter 1, 2, or 3, the program should ask the same question again.
-- Randomly generates ten (10) math problems, formatted as X + Y =, where both X and Y are positive integers.
-- Asks the user to solve each problem. If the answer is incorrect (or not a number at all), the program should print "EEE" and print the same problem again, allowing the user a total of three attempts to solve this problem. If the user still cannot write the correct answer after three attempts, the program should write the correct answer itself.
-- Finally, the program should print the user's score: the number of correct answers out of 10. Create your program as follows, where one function prompts (and re-asks if necessary) the user to choose a game level and returns 1, 2, or 3; the second function returns a randomly generated positive integer, taking into account the level number, or prints an error message if the level is not 1, 2, or 3.
+## Features:
+
+* Three Difficulty Levels:
+
+* Level 1: Simple arithmetic problems with small numbers (0-5).
+* Level 2: Intermediate problems with larger numbers (0-10).
+* Level 3: Advanced problems with bigger numbers (10-50).
+* Dynamic Challenges: The game generates random math problems with various operations (+, -, *) to keep the experience fresh and engaging.
+
+* Limited Attempts: Each question allows up to three attempts before revealing the correct answer.
+
+* Scoring System: The game tracks your progress, awarding points for correct answers and displaying your final score at the end.
+
+* Level-Up Mechanism: Players automatically level up to a higher difficulty if they perform well.
+
+* Game Over: The game concludes after 10 questions, displaying the player's final score and feedback.
+
+## How to Play:
+
+* Select a difficulty level from the dropdown menu.
+* Click the Start button to begin the game.
+* Solve the math problems displayed on the screen and enter your answer in the input box.
+* Click Submit Answer to check your response.
+* Keep playing
+
+
+This game is perfect for students, parents, or anyone looking to sharpen their math skills while having fun. Will you rise to the challenge and ace all the levels?
+
+## Test App
+[Little Profesor ](https://blitz-flex.github.io/Little-Professor/)
