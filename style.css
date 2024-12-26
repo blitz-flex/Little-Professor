@@ -58,69 +58,56 @@ h1 {
 }
 
 .game-over {
-    color: #f44336;
-    font-weight: bold;
+    color: #a78bfa;
+    background: rgba(167, 139, 250, 0.1);
 }
 
 select, input, button {
-    font-size: 18px;
-    padding: 14px;
+    font-size: 1.1rem;
+    padding: 1rem 1.5rem;
     width: 100%;
-    margin: 12px 0;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    transition: 0.3s;
+    margin: 1rem 0;
+    border-radius: 14px;
+    border: 2px solid #475569;
+    background: #334155;
+    color: #f8fafc;
+    transition: all 0.2s ease;
 }
 
-select:focus, input:focus, button:focus {
-    border-color: #3f51b5;
+select:focus, input:focus {
+    border-color: #60a5fa;
     outline: none;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
 }
 
 button {
-    background-color: #3f51b5;
-    color: white;
+    background: #60a5fa;
+    border: none;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #303f9f;
-}
-
-button:active {
-    background-color: #1a237e;
+    background: #3b82f6;
 }
 
 #start {
-    background-color: #4CAF50;
+    background: #4ade80;
 }
 
 #start:hover {
-    background-color: #388E3C;
+    background: #22c55e;
 }
 
-.clear {
-    background-color: #f44336;
+button:disabled {
+    background: #475569;
+    cursor: not-allowed;
 }
 
-.clear:hover {
-    background-color: #e53935;
-}
-
-/* Center align the 'Your Answer' input box and make it symmetric */
 #answer {
-    margin-left: auto;
-    margin-right: auto;
+    width: calc(100% - 3rem);
     text-align: center;
-    display: block;
+    font-size: 1.4rem;
+    background: #1e293b;
 }
 
-
-#answer {
-    width: 335px; 
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-
-}
