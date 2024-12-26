@@ -111,3 +111,9 @@ button:disabled {
     background: #1e293b;
 }
 
+@media (max-width: 480px) {
+    .calculator-container {
+        width: 85%;
+        padding: 2rem;
+    }
+}
