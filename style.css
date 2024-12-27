@@ -85,23 +85,32 @@ button {
     border: none;
     font-weight: 600;
     cursor: pointer;
+    transition: all 0.3s ease-in-out; 
 }
 
 button:hover {
     background: #3b82f6;
+    transform: scale(1.03); 
+}
+
+button:active {
+    transform: scale(0.95); 
 }
 
 #start {
     background: #4ade80;
+    transition: all 0.3s ease-in-out;
 }
 
 #start:hover {
     background: #22c55e;
+    transform: scale(1.05);
 }
 
 button:disabled {
     background: #475569;
     cursor: not-allowed;
+    transform: none; 
 }
 
 #answer {
