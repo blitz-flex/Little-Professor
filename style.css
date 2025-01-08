@@ -126,3 +126,9 @@ button:disabled {
         padding: 2rem;
     }
 }
+
+.timer {
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    margin-top: 1rem; /* Add margin-top */
+}
