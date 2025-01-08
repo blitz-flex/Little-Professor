@@ -3,6 +3,8 @@ let currentProblem;
 let currentAnswer;
 let currentAttempts = 0;
 let totalQuestions = 10;
+let timeLeft = 60; 
+let timerInterval; 
 
 function generatRandNum(level) {
     if (level == 1) return Math.floor(Math.random() * 10);
@@ -50,6 +52,7 @@ function startGame() {
     score = 0;
     currentAttempts = 0;
     totalQuestions = 10;
+    timeLeft = 60; // Reset time left for the timer
 
     // Hide "Start" button and level selector
     document.getElementById("start").style.display = "none";
@@ -67,6 +70,9 @@ function startGame() {
     document.querySelector(".selected-level").textContent = `Level: ${level}`;
 
     generateProblem(parseInt(level));
+
+    // Start the timer
+    startTimer();
 }
 
 function generateProblem(level) {
@@ -118,6 +124,7 @@ function submitAnswer() {
 }
 
 function endGame() {
+    clearInterval(timerInterval); // Stop the timer
     document.getElementById("answer").disabled = true;
     document.getElementById("submit").disabled = true;
     document.querySelector(".problem").textContent = "Game Over!";
@@ -157,4 +164,14 @@ function endGame() {
     problem: `${num1} ${operation} ${num2}`,
     answer: correctAnswer,
   };
+}
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("time-left").textContent = timeLeft;
+
+        if (timeLeft === 0) {
+            endGame();
+        }
+    }, 1000); // Update the timer every 1 second
 }
