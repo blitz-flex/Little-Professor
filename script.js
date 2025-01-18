@@ -18,60 +18,58 @@ function generateRandomOperation() {
 }
 
 function generateRandomProblem(level) {
-  const num1 = generatRandNum(level);
-  let num2 = generatRandNum(level);
-  const operation = generateRandomOperation();
+    const num1 = generatRandNum(level);
+    let num2 = generatRandNum(level);
+    const operation = generateRandomOperation();
 
-  let correctAnswer;
-  if (operation === "+") {
-    correctAnswer = num1 + num2;
-  } else if (operation === "-") {
-    // Ensure subtraction results in positive numbers
-    while (num1 <= num2) {
-      num1 = generatRandNum(level);
-      num2 = generatRandNum(level);
+    let correctAnswer;
+    if (operation === "+") {
+        correctAnswer = num1 + num2;
+    } else if (operation === "-") {
+        while (num1 <= num2) {
+            num1 = generatRandNum(level);
+            num2 = generatRandNum(level);
+        }
+        correctAnswer = num1 - num2;
+    } else if (operation === "*") {
+        correctAnswer = num1 * num2;
+    } else {
+        while (num2 === 0 || num1 % num2 !== 0) {
+            num2 = generatRandNum(level);
+        }
+        correctAnswer = num1 / num2;
     }
-    correctAnswer = num1 - num2;
-  } else if (operation === "*") {
-    correctAnswer = num1 * num2;
-  } else {
-    // Ensure division results in positive integers and no remainders
-    while (num2 === 0 || num1 % num2 !== 0) {
-      num2 = generatRandNum(level);
-    }
-    correctAnswer = num1 / num2;
-  }
 
-  return {
-    problem: `${num1} ${operation} ${num2}`,
-    answer: correctAnswer,
-  };
+    return {
+        problem: `${num1} ${operation} ${num2}`,
+        answer: correctAnswer,
+    };
 }
 
 function startGame() {
     score = 0;
     currentAttempts = 0;
     totalQuestions = 10;
-    timeLeft = 60; // Reset time left for the timer
+    timeLeft = 60;
 
-    // Hide "Start" button and level selector
+    // Show game elements
+    document.getElementById("game-elements").style.display = "block";
     document.getElementById("start").style.display = "none";
     document.getElementById("level").style.display = "none";
+
     document.getElementById("answer").disabled = false;
     document.getElementById("submit").disabled = false;
-
+    
     // Reset score and feedback
     document.querySelector(".score").textContent = `Score: 0`;
     document.querySelector(".feedback").textContent = "";
     document.querySelector(".feedback").className = "feedback";
-
+    
     // Get and display selected level
     const level = document.getElementById("level").value;
     document.querySelector(".selected-level").textContent = `Level: ${level}`;
 
     generateProblem(parseInt(level));
-
-    // Start the timer
     startTimer();
 }
 
@@ -134,44 +132,16 @@ function endGame() {
   // Show "Start" button and level selector for replay
   document.getElementById("start").style.display = "block";
   document.getElementById("level").style.display = "block";
-  document.querySelector(".selected-level").textContent = ""; // Clear displayed level
-}function generateRandomProblem(level) {
-const num1 = generatRandNum(level);
-let num2 = generatRandNum(level);
-const operation = generateRandomOperation();
-
-let correctAnswer;
-if (operation === "+") {
-  correctAnswer = num1 + num2;
-} else if (operation === "-") {
-  // Ensure subtraction results in positive numbers
-  while (num1 <= num2) {
-    num1 = generatRandNum(level);
-    num2 = generatRandNum(level);
-  }
-  correctAnswer = num1 - num2;
-} else if (operation === "*") {
-  correctAnswer = num1 * num2;
-} else {
-  // Ensure division results in positive integers and no remainders
-  while (num2 === 0 || num1 % num2 !== 0) {
-    num2 = generatRandNum(level);
-  }
-  correctAnswer = num1 / num2;
+  document.querySelector(".selected-level").textContent = "";
 }
 
-return {
-  problem: `${num1} ${operation} ${num2}`,
-  answer: correctAnswer,
-};
-}
 function startTimer() {
-  timerInterval = setInterval(() => {
-      timeLeft--;
-      document.getElementById("time-left").textContent = timeLeft;
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("time-left").textContent = timeLeft;
 
-      if (timeLeft === 0) {
-          endGame();
-      }
-  }, 1000); // Update the timer every 1 second
+        if (timeLeft === 0) {
+            endGame();
+        }
+    }, 1000);
 }
