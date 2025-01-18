@@ -18,7 +18,7 @@ function generateRandomOperation() {
 }
 
 function generateRandomProblem(level) {
-    const num1 = generatRandNum(level);
+    let num1 = generatRandNum(level);
     let num2 = generatRandNum(level);
     const operation = generateRandomOperation();
 
@@ -69,7 +69,9 @@ function startGame() {
     const level = document.getElementById("level").value;
     document.querySelector(".selected-level").textContent = `Level: ${level}`;
 
+    // **Generate the first problem immediately**
     generateProblem(parseInt(level));
+    // Start the timer
     startTimer();
 }
 
@@ -122,17 +124,17 @@ function submitAnswer() {
 }
 
 function endGame() {
-  clearInterval(timerInterval); // Stop the timer
-  document.getElementById("answer").disabled = true;
-  document.getElementById("submit").disabled = true;
-  document.querySelector(".problem").textContent = "Game Over!";
-  document.querySelector(".feedback").className = "feedback game-over";
-  document.querySelector(".feedback").textContent = `Final Score: ${score} / 10`;
+    clearInterval(timerInterval); // Stop the timer
+    document.getElementById("answer").disabled = true;
+    document.getElementById("submit").disabled = true;
+    document.querySelector(".problem").textContent = "Game Over!";
+    document.querySelector(".feedback").className = "feedback game-over";
+    document.querySelector(".feedback").textContent = `Final Score: ${score} / 10`;
 
-  // Show "Start" button and level selector for replay
-  document.getElementById("start").style.display = "block";
-  document.getElementById("level").style.display = "block";
-  document.querySelector(".selected-level").textContent = "";
+    // Show "Start" button and level selector for replay
+    document.getElementById("start").style.display = "block";
+    document.getElementById("level").style.display = "block";
+    document.querySelector(".selected-level").textContent = "";
 }
 
 function startTimer() {
