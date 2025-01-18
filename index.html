@@ -5,25 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"> 
-    <title>Little Professor </title>   
+    <title>Little Professor</title>   
 </head>
 <body>
     <div class="calculator-container">
         <h1>Little Professor</h1>
-        <div class="score">Score: 0</div>
-        <div class="selected-level">Level: </div>
         <select id="level">
             <option value="1">Level 1</option>
             <option value="2">Level 2</option>
             <option value="3">Level 3</option>
         </select>
         <button id="start" onclick="startGame()">Start</button>
-        <div class="problem"></div>
-        <input type="text" id="answer" disabled placeholder="Your Answer">
-        <button id="submit" onclick="submitAnswer()" disabled>Submit Answer</button>
-        <div class="feedback"></div>        
-        <div class="timer">Time left: <span id="time-left">60</span> seconds</div> 
+
+        <!-- Hidden elements initially -->
+        <div id="game-elements" style="display: none;">
+            <div class="score">Score: 0</div>
+            <div class="selected-level">Level: </div>
+            <div class="problem"></div>
+            <input type="text" id="answer" disabled placeholder="Your Answer">
+            <button id="submit" onclick="submitAnswer()" disabled>Submit Answer</button>
+            <div class="feedback"></div>        
+            <div class="timer">Time left: <span id="time-left">60</span> seconds</div> 
+        </div>
     </div>
     <script src="script.js"></script>
-  </body>
+</body>
 </html>
