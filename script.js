@@ -125,18 +125,48 @@ function submitAnswer() {
 
 function endGame() {
     clearInterval(timerInterval); // Stop the timer
+    
+    // Hide game interaction elements
     document.getElementById("answer").disabled = true;
     document.getElementById("submit").disabled = true;
-    document.querySelector(".problem").textContent = "Game Over!";
-    document.querySelector(".feedback").className = "feedback game-over";
-    document.querySelector(".feedback").textContent = `Final Score: ${score} / 10`;
+    document.getElementById("game-elements").style.display = "none";
 
-    // Show "Start" button and level selector for replay
-    document.getElementById("start").style.display = "block";
-    document.getElementById("level").style.display = "block";
-    document.querySelector(".selected-level").textContent = "";
+    // Create a result container
+    const resultContainer = document.createElement("div");
+    resultContainer.className = "result-container";
+    resultContainer.innerHTML = `
+        <h2>Game Over!</h2>
+        <p>Final Score: ${score} / 10</p>
+        <button id="try-again">Try Again</button>
+    `;
+
+    // Add styling to the result container
+    resultContainer.style.textAlign = "center";
+    resultContainer.style.color = "#f8fafc";
+    resultContainer.querySelector("h2").style.fontSize = "2rem";
+    resultContainer.querySelector("p").style.fontSize = "1.5rem";
+    
+    const tryAgainButton = resultContainer.querySelector("#try-again");
+    tryAgainButton.style.backgroundColor = "#4ade80";
+    tryAgainButton.style.border = "none";
+    tryAgainButton.style.padding = "1rem 1.5rem";
+    tryAgainButton.style.borderRadius = "14px";
+    tryAgainButton.style.marginTop = "1rem";
+    tryAgainButton.style.cursor = "pointer";
+
+    // Add click event to try again button
+    tryAgainButton.onclick = () => {
+        // Remove result container
+        resultContainer.remove();
+        
+        // Show start and level elements
+        document.getElementById("start").style.display = "block";
+        document.getElementById("level").style.display = "block";
+    };
+
+    // Add result container to the calculator container
+    document.querySelector(".calculator-container").appendChild(resultContainer);
 }
-
 function startTimer() {
     timerInterval = setInterval(() => {
         timeLeft--;
