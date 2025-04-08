@@ -96,7 +96,7 @@ function generateProblem(level) {
     currentAttempts = 0;
     totalQuestions--;
 
-    document.querySelector(".problem").textContent = `Solve: ${problem}`;
+    document.querySelector(".problem").textContent = `${problem}`;
     document.getElementById("answer").value = "";
 }
 
