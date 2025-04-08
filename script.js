@@ -75,6 +75,15 @@ function startGame() {
     startTimer();
 }
 
+
+// Add keyboard support for submitting answers
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        // Trigger the submitAnswer function when Enter is pressed
+        submitAnswer();
+    }
+});
+
 function generateProblem(level) {
     if (totalQuestions === 0) {
         endGame();
