@@ -1,4 +1,3 @@
-
 # Game Description: Little Professor
 The Little Professor game is an educational and entertaining math challenge designed to improve arithmetic skills for players of all ages. It provides a fun way to practice addition, subtraction, and multiplication through randomized math problems, with three levels of difficulty to suit various skill levels.
 
@@ -9,7 +8,7 @@ The Little Professor game is an educational and entertaining math challenge desi
 
 * Level 1: Simple arithmetic problems with small numbers (0-5).
 * Level 2: Intermediate problems with larger numbers (0-10).
-* Level 3: Advanced problems with bigger numbers (10-50).
+* Level 3: Advanced problems with bigger numbers (10-30).
 * Dynamic Challenges: The game generates random math problems with various operations (+, -, *) to keep the experience fresh and engaging.
 
 * Limited Attempts: Each question allows up to three attempts before revealing the correct answer.
@@ -32,4 +31,4 @@ The Little Professor game is an educational and entertaining math challenge desi
 This game is perfect for students, parents, or anyone looking to sharpen their math skills while having fun. Will you rise to the challenge and ace all the levels?
 
 ## Test App
-[Little Profesor ](https://little-profesor.netlify.app/)
+[Little Professor ](https://little-profesor.netlify.app/)

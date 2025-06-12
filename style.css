@@ -38,6 +38,17 @@ h1 {
     background: #334155;
     border-radius: 16px;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Problem appear animation */
+@keyframes problemAppear {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.problem-appear {
+    animation: problemAppear 0.5s ease-out forwards;
 }
 
 .feedback {
@@ -131,4 +142,60 @@ button:disabled {
     font-size: 1.1rem;
     color: #cbd5e1;
     margin-top: 1rem; /* Add margin-top */
+}
+
+/* Animation classes for end game */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes confetti {
+    0% { background-position: 0 0; }
+    100% { background-position: 100% 100%; }
+}
+
+.result-container {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.result-container h2 {
+    animation: pulse 1.5s infinite;
+}
+
+.celebration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background-image: 
+        radial-gradient(circle, #4ade80 1px, transparent 1px),
+        radial-gradient(circle, #60a5fa 1px, transparent 1px),
+        radial-gradient(circle, #f472b6 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: confetti 10s linear infinite;
+    opacity: 0.5;
+}
+
+.score-animation {
+    display: inline-block;
+    animation: pulse 0.5s ease-out;
+}
+
+.try-again-btn-animation {
+    transition: all 0.3s ease;
+}
+
+.try-again-btn-animation:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.5);
 }

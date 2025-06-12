@@ -6,10 +6,10 @@ let totalQuestions = 10;
 let timeLeft = 60; 
 let timerInterval; 
 
-function generatRandNum(level) {
+function generateRandNum(level) {
     if (level == 1) return Math.floor(Math.random() * 10);
     if (level == 2) return Math.floor(Math.random() * 20);
-    return Math.floor(Math.random() * 50) + 20;
+    return Math.floor(Math.random() * 10) + 20;
 }
 
 function generateRandomOperation() {
@@ -18,8 +18,8 @@ function generateRandomOperation() {
 }
 
 function generateRandomProblem(level) {
-    let num1 = generatRandNum(level);
-    let num2 = generatRandNum(level);
+    let num1 = generateRandNum(level);
+    let num2 = generateRandNum(level);
     const operation = generateRandomOperation();
 
     let correctAnswer;
@@ -27,15 +27,17 @@ function generateRandomProblem(level) {
         correctAnswer = num1 + num2;
     } else if (operation === "-") {
         while (num1 <= num2) {
-            num1 = generatRandNum(level);
-            num2 = generatRandNum(level);
+            num1 = generateRandNum(level);
+            num2 = generateRandNum(level);
         }
         correctAnswer = num1 - num2;
     } else if (operation === "*") {
         correctAnswer = num1 * num2;
-    } else {
+    } else { 
+        // Regenerate both numbers until they are perfectly divisible and num2 is not 0
         while (num2 === 0 || num1 % num2 !== 0) {
-            num2 = generatRandNum(level);
+            num1 = generateRandNum(level);
+            num2 = generateRandNum(level);
         }
         correctAnswer = num1 / num2;
     }
@@ -50,7 +52,18 @@ function startGame() {
     score = 0;
     currentAttempts = 0;
     totalQuestions = 10;
-    timeLeft = 60;
+    
+    // Get selected level
+    const level = parseInt(document.getElementById("level").value);
+    
+    // Set time based on level
+    if (level === 1) {
+        timeLeft = 60;  
+    } else if (level === 2) {
+        timeLeft = 120; 
+    } else {
+        timeLeft = 180; 
+    }
 
     // Show game elements
     document.getElementById("game-elements").style.display = "block";
@@ -65,12 +78,11 @@ function startGame() {
     document.querySelector(".feedback").textContent = "";
     document.querySelector(".feedback").className = "feedback";
     
-    // Get and display selected level
-    const level = document.getElementById("level").value;
+    // Display selected level
     document.querySelector(".selected-level").textContent = `Level: ${level}`;
 
     // **Generate the first problem immediately**
-    generateProblem(parseInt(level));
+    generateProblem(level);
     // Start the timer
     startTimer();
 }
@@ -96,8 +108,17 @@ function generateProblem(level) {
     currentAttempts = 0;
     totalQuestions--;
 
-    document.querySelector(".problem").textContent = `${problem}`;
+    const problemElement = document.querySelector(".problem");
+    problemElement.textContent = `${problem}`;
+    
+    // Add animation class
+    problemElement.classList.remove("problem-appear");
+    // Trigger reflow to restart animation
+    void problemElement.offsetWidth; 
+    problemElement.classList.add("problem-appear");
+    
     document.getElementById("answer").value = "";
+    document.getElementById("answer").focus(); 
 }
 
 function submitAnswer() {
@@ -114,7 +135,10 @@ function submitAnswer() {
         score++;
         feedbackElement.textContent = "Correct!";
         feedbackElement.className = "feedback correct";
-
+        
+        // Add correct answer animation
+        addCorrectAnswerEffect();
+        
         const level = parseInt(document.getElementById("level").value);
         generateProblem(level);
     } else {
@@ -132,21 +156,103 @@ function submitAnswer() {
     document.querySelector(".score").textContent = `Score: ${score}`;
 }
 
+// Add visual effect for correct answers
+function addCorrectAnswerEffect() {
+    // Create and add floating particles
+    for (let i = 0; i < 10; i++) {
+        createParticle();
+    }
+}
+
+// Create floating particle effect
+function createParticle() {
+    const particle = document.createElement("div");
+    const colors = ["#4ade80", "#60a5fa", "#f472b6", "#a78bfa"];
+    
+    // Random position around the problem area
+    const problemElement = document.querySelector(".problem");
+    const rect = problemElement.getBoundingClientRect();
+    const calculatorContainer = document.querySelector(".calculator-container");
+    const containerRect = calculatorContainer.getBoundingClientRect();
+    
+    // Position relative to the calculator container
+    const x = rect.left - containerRect.left + Math.random() * rect.width;
+    const y = rect.top - containerRect.top + Math.random() * rect.height;
+    
+    // Styling
+    particle.style.position = "absolute";
+    particle.style.left = x + "px";
+    particle.style.top = y + "px";
+    particle.style.width = Math.random() * 10 + 5 + "px";
+    particle.style.height = particle.style.width;
+    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.borderRadius = "50%";
+    particle.style.pointerEvents = "none";
+    particle.style.zIndex = "100";
+    
+    // Animation
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = Math.random() * 3 + 2;
+    const tx = Math.cos(angle) * (Math.random() * 100 + 50);
+    const ty = Math.sin(angle) * (Math.random() * 100 + 50);
+    
+    particle.animate(
+        [
+            { transform: "translate(0, 0)", opacity: 1 },
+            { transform: `translate(${tx}px, ${ty}px)`, opacity: 0 }
+        ],
+        {
+            duration: Math.random() * 1000 + 500,
+            easing: "cubic-bezier(0, .9, .57, 1)"
+        }
+    );
+    
+    calculatorContainer.appendChild(particle);
+    
+    // Remove particle after animation
+    setTimeout(() => {
+        particle.remove();
+    }, 1500);
+}
+
 function endGame() {
-    clearInterval(timerInterval); // Stop the timer
+    clearInterval(timerInterval); 
+    
+    // Prevent multiple calls to endGame
+    if (document.querySelector(".result-container")) {
+        // Exit if result container already exists
+        return; 
+    }
     
     // Hide game interaction elements
     document.getElementById("answer").disabled = true;
     document.getElementById("submit").disabled = true;
     document.getElementById("game-elements").style.display = "none";
 
+    // Create celebration effect
+    const celebration = document.createElement("div");
+    celebration.className = "celebration";
+    document.querySelector(".calculator-container").appendChild(celebration);
+
     // Create a result container
     const resultContainer = document.createElement("div");
     resultContainer.className = "result-container";
+    
+    // Add different messages based on score
+    let message = "";
+    if (score >= 8) {
+        message = "Excellent work!";
+    } else if (score >= 5) {
+        message = "Good job!";
+    } else {
+        message = "Keep practicing!";
+    }
+    
     resultContainer.innerHTML = `
         <h2>Game Over!</h2>
-        <p>Final Score: ${score} / 10</p>
-        <button id="try-again">Try Again</button>
+        <p>${message}</p>
+        <p>Final Score: <span class="score-animation">${score} / 10</span></p>
+        <button id="try-again" class="try-again-btn-animation">Try Again</button>
     `;
 
     // Add styling to the result container
@@ -165,8 +271,11 @@ function endGame() {
 
     // Add click event to try again button
     tryAgainButton.onclick = () => {
-        // Remove result container
+        // Remove result container and celebration
         resultContainer.remove();
+        if (document.querySelector(".celebration")) {
+            document.querySelector(".celebration").remove();
+        }
         
         // Show start and level elements
         document.getElementById("start").style.display = "block";
