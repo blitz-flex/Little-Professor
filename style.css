@@ -14,6 +14,8 @@ body {
     width: 400px;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
 h1 {
@@ -199,3 +201,73 @@ button:disabled {
     transform: scale(1.1);
     box-shadow: 0 0 15px rgba(74, 222, 128, 0.5);
 }
+
+/* Correct answer animation - Simple smooth glow */
+@keyframes correctGlow {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(74, 222, 128, 0);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(74, 222, 128, 0.8), 0 0 60px rgba(74, 222, 128, 0.4);
+        border-color: rgba(74, 222, 128, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(74, 222, 128, 0);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.correct-answer-animation {
+    animation: correctGlow 0.6s ease-out;
+}
+
+/* Firework container */
+.fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Individual firework particle */
+.firework {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+@keyframes fireworkExplode {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0);
+    }
+}
+
+/* Shimmer effect for excellent score */
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+.shimmer-text {
+    background: linear-gradient(90deg, #f8fafc 0%, #4ade80 50%, #60a5fa 75%, #f8fafc 100%);
+    background-size: 1000px 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s infinite;
+}
+

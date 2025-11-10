@@ -3,8 +3,8 @@ let currentProblem;
 let currentAnswer;
 let currentAttempts = 0;
 let totalQuestions = 10;
-let timeLeft = 60; 
-let timerInterval; 
+let timeLeft = 60;
+let timerInterval;
 
 function generateRandNum(level) {
     if (level == 1) return Math.floor(Math.random() * 10);
@@ -33,7 +33,7 @@ function generateRandomProblem(level) {
         correctAnswer = num1 - num2;
     } else if (operation === "*") {
         correctAnswer = num1 * num2;
-    } else { 
+    } else {
         // Regenerate both numbers until they are perfectly divisible and num2 is not 0
         while (num2 === 0 || num1 % num2 !== 0) {
             num1 = generateRandNum(level);
@@ -52,17 +52,17 @@ function startGame() {
     score = 0;
     currentAttempts = 0;
     totalQuestions = 10;
-    
+
     // Get selected level
     const level = parseInt(document.getElementById("level").value);
-    
+
     // Set time based on level
     if (level === 1) {
-        timeLeft = 60;  
+        timeLeft = 60;
     } else if (level === 2) {
-        timeLeft = 120; 
+        timeLeft = 120;
     } else {
-        timeLeft = 180; 
+        timeLeft = 180;
     }
 
     // Show game elements
@@ -72,21 +72,23 @@ function startGame() {
 
     document.getElementById("answer").disabled = false;
     document.getElementById("submit").disabled = false;
-    
+
     // Reset score and feedback
     document.querySelector(".score").textContent = `Score: 0`;
     document.querySelector(".feedback").textContent = "";
     document.querySelector(".feedback").className = "feedback";
-    
+
     // Display selected level
     document.querySelector(".selected-level").textContent = `Level: ${level}`;
 
-    // **Generate the first problem immediately**
+    // Update timer display
+    document.getElementById("time-left").textContent = timeLeft;
+
+    // Generate the first problem immediately
     generateProblem(level);
     // Start the timer
     startTimer();
 }
-
 
 // Add keyboard support for submitting answers
 document.addEventListener("keydown", (event) => {
@@ -110,15 +112,20 @@ function generateProblem(level) {
 
     const problemElement = document.querySelector(".problem");
     problemElement.textContent = `${problem}`;
-    
+
     // Add animation class
     problemElement.classList.remove("problem-appear");
     // Trigger reflow to restart animation
-    void problemElement.offsetWidth; 
+    void problemElement.offsetWidth;
     problemElement.classList.add("problem-appear");
-    
+
+    // Clear feedback message when moving to new problem
+    const feedbackElement = document.querySelector(".feedback");
+    feedbackElement.textContent = "";
+    feedbackElement.className = "feedback";
+
     document.getElementById("answer").value = "";
-    document.getElementById("answer").focus(); 
+    document.getElementById("answer").focus();
 }
 
 function submitAnswer() {
@@ -135,21 +142,29 @@ function submitAnswer() {
         score++;
         feedbackElement.textContent = "Correct!";
         feedbackElement.className = "feedback correct";
-        
+
         // Add correct answer animation
         addCorrectAnswerEffect();
-        
-        const level = parseInt(document.getElementById("level").value);
-        generateProblem(level);
+
+        // Clear "Correct!" message and move to next problem after animation
+        setTimeout(() => {
+            const level = parseInt(document.getElementById("level").value);
+            generateProblem(level);
+        }, 800);
     } else {
         currentAttempts++;
         feedbackElement.textContent = `Incorrect! Try again (${3 - currentAttempts} attempts left).`;
         feedbackElement.className = "feedback incorrect";
 
         if (currentAttempts === 3) {
-            feedbackElement.textContent = `Incorrect! The correct answer was ${currentAnswer}.`;
-            const level = parseInt(document.getElementById("level").value);
-            generateProblem(level);
+            feedbackElement.textContent = `Incorrect! ${currentProblem} = ${currentAnswer} `;
+            feedbackElement.className = "feedback incorrect";
+
+            // Clear feedback and move to next problem after showing the answer
+            setTimeout(() => {
+                const level = parseInt(document.getElementById("level").value);
+                generateProblem(level);
+            }, 2500);
         }
     }
 
@@ -158,100 +173,127 @@ function submitAnswer() {
 
 // Add visual effect for correct answers
 function addCorrectAnswerEffect() {
-    // Create and add floating particles
-    for (let i = 0; i < 10; i++) {
-        createParticle();
-    }
+    const problemElement = document.querySelector(".problem");
+
+    // Add glow animation to problem element
+    problemElement.classList.add("correct-answer-animation");
+    setTimeout(() => {
+        problemElement.classList.remove("correct-answer-animation");
+    }, 600);
+
+    // Create confetti burst
+    createConfettiBurst();
 }
 
-// Create floating particle effect
-function createParticle() {
-    const particle = document.createElement("div");
-    const colors = ["#4ade80", "#60a5fa", "#f472b6", "#a78bfa"];
-    
-    // Random position around the problem area
+// Create simple confetti burst effect
+function createConfettiBurst() {
     const problemElement = document.querySelector(".problem");
     const rect = problemElement.getBoundingClientRect();
     const calculatorContainer = document.querySelector(".calculator-container");
     const containerRect = calculatorContainer.getBoundingClientRect();
-    
-    // Position relative to the calculator container
-    const x = rect.left - containerRect.left + Math.random() * rect.width;
-    const y = rect.top - containerRect.top + Math.random() * rect.height;
-    
-    // Styling
-    particle.style.position = "absolute";
-    particle.style.left = x + "px";
-    particle.style.top = y + "px";
-    particle.style.width = Math.random() * 10 + 5 + "px";
-    particle.style.height = particle.style.width;
-    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    particle.style.borderRadius = "50%";
-    particle.style.pointerEvents = "none";
-    particle.style.zIndex = "100";
-    
-    // Animation
-    const angle = Math.random() * Math.PI * 2;
-    const velocity = Math.random() * 3 + 2;
-    const tx = Math.cos(angle) * (Math.random() * 100 + 50);
-    const ty = Math.sin(angle) * (Math.random() * 100 + 50);
-    
-    particle.animate(
-        [
-            { transform: "translate(0, 0)", opacity: 1 },
-            { transform: `translate(${tx}px, ${ty}px)`, opacity: 0 }
-        ],
-        {
-            duration: Math.random() * 1000 + 500,
-            easing: "cubic-bezier(0, .9, .57, 1)"
-        }
-    );
-    
-    calculatorContainer.appendChild(particle);
-    
-    // Remove particle after animation
-    setTimeout(() => {
-        particle.remove();
-    }, 1500);
+
+    // Center position of problem element
+    const centerX = rect.left - containerRect.left + rect.width / 2;
+    const centerY = rect.top - containerRect.top + rect.height / 2;
+
+    const colors = ["#4ade80", "#60a5fa", "#fbbf24", "#f472b6"];
+    const shapes = ["circle", "square"];
+
+    // Create 12 confetti pieces
+    for (let i = 0; i < 12; i++) {
+        const confetti = document.createElement("div");
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const size = Math.random() * 8 + 6;
+
+        confetti.style.position = "absolute";
+        confetti.style.left = centerX + "px";
+        confetti.style.top = centerY + "px";
+        confetti.style.width = size + "px";
+        confetti.style.height = size + "px";
+        confetti.style.backgroundColor = color;
+        confetti.style.borderRadius = shape === "circle" ? "50%" : "2px";
+        confetti.style.pointerEvents = "none";
+        confetti.style.zIndex = "100";
+
+        // Calculate direction
+        const angle = (Math.PI * 2 * i) / 12;
+        const distance = Math.random() * 80 + 60;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance - 30; // Slight upward bias
+
+        confetti.animate(
+            [
+                { transform: "translate(0, 0) rotate(0deg)", opacity: 1 },
+                { transform: `translate(${tx}px, ${ty}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+            ],
+            {
+                duration: 800,
+                easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+            }
+        );
+
+        calculatorContainer.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 800);
+    }
 }
 
 function endGame() {
-    clearInterval(timerInterval); 
-    
+    clearInterval(timerInterval);
+
     // Prevent multiple calls to endGame
     if (document.querySelector(".result-container")) {
         // Exit if result container already exists
-        return; 
+        return;
     }
-    
+
     // Hide game interaction elements
     document.getElementById("answer").disabled = true;
     document.getElementById("submit").disabled = true;
     document.getElementById("game-elements").style.display = "none";
 
-    // Create celebration effect
-    const celebration = document.createElement("div");
-    celebration.className = "celebration";
-    document.querySelector(".calculator-container").appendChild(celebration);
+    // Calculate percentage
+    const percentage = (score / 10) * 100;
+
+    // Create fireworks container if score is 70% or higher
+    let fireworksContainer;
+    if (percentage >= 70) {
+        fireworksContainer = document.createElement("div");
+        fireworksContainer.className = "fireworks-container";
+        document.querySelector(".calculator-container").appendChild(fireworksContainer);
+
+        // Launch fireworks continuously for 5 seconds
+        launchFireworks(fireworksContainer);
+    }
+
+    // Create celebration effect for lower scores
+    if (percentage < 70) {
+        const celebration = document.createElement("div");
+        celebration.className = "celebration";
+        document.querySelector(".calculator-container").appendChild(celebration);
+    }
 
     // Create a result container
     const resultContainer = document.createElement("div");
     resultContainer.className = "result-container";
-    
-    // Add different messages based on score
+
+    // Add different messages based on score percentage
     let message = "";
-    if (score >= 8) {
-        message = "Excellent work!";
-    } else if (score >= 5) {
-        message = "Good job!";
+    let messageClass = "";
+
+    if (percentage >= 70) {
+        message = "🎉 Excellent work! 🎉";
+        messageClass = "shimmer-text";
+    } else if (percentage >= 50) {
+        message = "Good effort! Try again to improve!";
     } else {
-        message = "Keep practicing!";
+        message = "Keep practicing! You can do better!";
     }
-    
+
     resultContainer.innerHTML = `
-        <h2>Game Over!</h2>
-        <p>${message}</p>
-        <p>Final Score: <span class="score-animation">${score} / 10</span></p>
+        <h2 class="${messageClass}">Game Over!</h2>
+        <p class="${messageClass}">${message}</p>
+        <p>Final Score: <span class="score-animation">${score} / 10 (${percentage}%)</span></p>
         <button id="try-again" class="try-again-btn-animation">Try Again</button>
     `;
 
@@ -259,8 +301,10 @@ function endGame() {
     resultContainer.style.textAlign = "center";
     resultContainer.style.color = "#f8fafc";
     resultContainer.querySelector("h2").style.fontSize = "2rem";
-    resultContainer.querySelector("p").style.fontSize = "1.5rem";
-    
+    resultContainer.querySelectorAll("p").forEach(p => {
+        p.style.fontSize = "1.5rem";
+    });
+
     const tryAgainButton = resultContainer.querySelector("#try-again");
     tryAgainButton.style.backgroundColor = "#4ade80";
     tryAgainButton.style.border = "none";
@@ -271,12 +315,15 @@ function endGame() {
 
     // Add click event to try again button
     tryAgainButton.onclick = () => {
-        // Remove result container and celebration
+        // Remove result container and celebration/fireworks
         resultContainer.remove();
         if (document.querySelector(".celebration")) {
             document.querySelector(".celebration").remove();
         }
-        
+        if (fireworksContainer) {
+            fireworksContainer.remove();
+        }
+
         // Show start and level elements
         document.getElementById("start").style.display = "block";
         document.getElementById("level").style.display = "block";
@@ -285,6 +332,62 @@ function endGame() {
     // Add result container to the calculator container
     document.querySelector(".calculator-container").appendChild(resultContainer);
 }
+
+// Launch fireworks animation
+function launchFireworks(container) {
+    let fireworkCount = 0;
+    const maxFireworks = 20;
+
+    const fireworkInterval = setInterval(() => {
+        if (fireworkCount >= maxFireworks) {
+            clearInterval(fireworkInterval);
+            return;
+        }
+
+        createFirework(container);
+        fireworkCount++;
+    }, 300);
+}
+
+// Create a single firework explosion
+function createFirework(container) {
+    const colors = ["#4ade80", "#60a5fa", "#f472b6", "#a78bfa", "#fbbf24", "#fb923c"];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+
+    // Random position
+    const x = Math.random() * 100;
+    const y = Math.random() * 60 + 20; // Keep in middle-upper area
+
+    // Create multiple particles for explosion effect
+    const particleCount = 30;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement("div");
+        particle.className = "firework";
+        particle.style.backgroundColor = color;
+        particle.style.left = x + "%";
+        particle.style.top = y + "%";
+
+        // Calculate random direction for explosion
+        const angle = (Math.PI * 2 * i) / particleCount;
+        const velocity = Math.random() * 100 + 50;
+        const tx = Math.cos(angle) * velocity;
+        const ty = Math.sin(angle) * velocity;
+
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+
+        particle.style.animation = `fireworkExplode ${Math.random() * 0.5 + 1}s ease-out forwards`;
+
+        container.appendChild(particle);
+
+        // Remove particle after animation
+        setTimeout(() => {
+            particle.remove();
+        }, 1500);
+    }
+}
+
 function startTimer() {
     timerInterval = setInterval(() => {
         timeLeft--;
@@ -295,3 +398,4 @@ function startTimer() {
         }
     }, 1000);
 }
+
