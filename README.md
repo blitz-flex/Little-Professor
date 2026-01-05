@@ -33,15 +33,11 @@ Little Professor is an addictive educational game that transforms boring math pr
 | **Level 3** | 10-30 | Challenge seekers |
 
 
-
-
-## 🎮 **[Start Playing Now →](https://little-profesor.netlify.app/)**
-
-
 ## 🛠️ **Built With**
 
 Pure HTML, CSS, and JavaScript – No frameworks, just fast, fun gameplay.
 
+## 🎮 **[Start Playing Now →](https://little-profesor.netlify.app/)**
 
 
 
