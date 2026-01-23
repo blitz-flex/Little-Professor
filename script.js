@@ -5,6 +5,7 @@ let currentAttempts = 0;
 let totalQuestions = 10;
 let timeLeft = 60;
 let timerInterval;
+let isSubmitting = false; // Flag to prevent multiple submissions
 
 function generateRandNum(level) {
     if (level == 1) return Math.floor(Math.random() * 10);
@@ -52,6 +53,7 @@ function startGame() {
     score = 0;
     currentAttempts = 0;
     totalQuestions = 10;
+    isSubmitting = false; // Reset flag at game start
 
     // Get selected level
     const level = parseInt(document.getElementById("level").value);
@@ -129,6 +131,11 @@ function generateProblem(level) {
 }
 
 function submitAnswer() {
+    // Prevent multiple submissions
+    if (isSubmitting) {
+        return;
+    }
+
     const feedbackElement = document.querySelector(".feedback");
     const userAnswer = parseInt(document.getElementById("answer").value);
 
@@ -137,6 +144,9 @@ function submitAnswer() {
         feedbackElement.className = "feedback invalid";
         return;
     }
+
+    // Set flag to prevent additional submissions
+    isSubmitting = true;
 
     if (userAnswer === currentAnswer) {
         score++;
@@ -150,6 +160,7 @@ function submitAnswer() {
         setTimeout(() => {
             const level = parseInt(document.getElementById("level").value);
             generateProblem(level);
+            isSubmitting = false; // Reset flag after moving to next problem
         }, 800);
     } else {
         currentAttempts++;
@@ -164,7 +175,11 @@ function submitAnswer() {
             setTimeout(() => {
                 const level = parseInt(document.getElementById("level").value);
                 generateProblem(level);
+                isSubmitting = false; // Reset flag after moving to next problem
             }, 2500);
+        } else {
+            // If not the final attempt, allow next submission
+            isSubmitting = false;
         }
     }
 
