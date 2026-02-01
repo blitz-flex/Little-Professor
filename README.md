@@ -21,10 +21,10 @@ Little Professor is an addictive educational game that transforms boring math pr
 ## **Game Modes**
 
 | Level | Number Range | Best For |
-|-------|--------------|----------|
-| **Level 1** | 0-10 | Beginners & young learners |
-| **Level 2** | 0-20 | Building confidence |
-| **Level 3** | 10-30 | Challenge seekers |
+|-------|-------|----------|
+| **Level 1** | 0-10  | Beginners & young learners |
+| **Level 2** | 10-20 | Building confidence |
+| **Level 3** | 20-30 | Challenge seekers |
 
 
 ## **Built With**

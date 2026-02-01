@@ -9,8 +9,8 @@ let isSubmitting = false; // Flag to prevent multiple submissions
 
 function generateRandNum(level) {
     if (level == 1) return Math.floor(Math.random() * 10);
-    if (level == 2) return Math.floor(Math.random() * 20);
-    return Math.floor(Math.random() * 10) + 20;
+    if (level == 2) return Math.floor(Math.random() * 11) + 10; // Level 2: 10-20
+    return Math.floor(Math.random() * 11) + 20;  // Level 3: 20-30
 }
 
 function generateRandomOperation() {

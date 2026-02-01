@@ -65,7 +65,7 @@ h1 {
     background: rgba(74, 222, 128, 0.1);
 }
 
-.incorrect {
+.feedback.incorrect {
     color: #fb7185;
     background: rgba(251, 113, 133, 0.1);
 }
