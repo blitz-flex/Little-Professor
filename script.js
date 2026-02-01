@@ -54,6 +54,7 @@ function startGame() {
     currentAttempts = 0;
     totalQuestions = 10;
     isSubmitting = false; // Reset flag at game start
+    gameEnded = false; // Reset game ended flag
 
     // Get selected level
     const level = parseInt(document.getElementById("level").value);
@@ -253,7 +254,15 @@ function createConfettiBurst() {
     }
 }
 
+let gameEnded = false; // Add flag to prevent multiple calls
+
 function endGame() {
+    // Check if game already ended
+    if (gameEnded) {
+        return;
+    }
+
+    gameEnded = true;
     clearInterval(timerInterval);
 
     // Prevent multiple calls to endGame
@@ -330,6 +339,12 @@ function endGame() {
 
     // Add click event to try again button
     tryAgainButton.onclick = () => {
+        // Stop the timer completely
+        clearInterval(timerInterval);
+
+        // Reset gameEnded flag
+        gameEnded = false;
+
         // Remove result container and celebration/fireworks
         resultContainer.remove();
         if (document.querySelector(".celebration")) {
