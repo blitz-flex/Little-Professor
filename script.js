@@ -82,7 +82,7 @@ function startGame() {
     document.querySelector(".feedback").className = "feedback";
 
     // Display selected level
-    document.querySelector(".selected-level").textContent = `Level: ${level}`;
+    document.querySelector(".selected-level").textContent = `Question: 1`;
 
     // Update timer display
     document.getElementById("time-left").textContent = timeLeft;
@@ -112,6 +112,10 @@ function generateProblem(level) {
     currentAnswer = answer;
     currentAttempts = 0;
     totalQuestions--;
+
+    // Calculate current question number (10 - remaining = current)
+    const currentQuestionNumber = 10 - totalQuestions;
+    document.querySelector(".selected-level").textContent = `Question: ${currentQuestionNumber}`;
 
     const problemElement = document.querySelector(".problem");
     problemElement.textContent = `${problem}`;

@@ -25,6 +25,12 @@ h1 {
     font-weight: 700;
 }
 
+#game-elements {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 .score, .selected-level {
     font-size: 1.1rem;
     color: #cbd5e1;
