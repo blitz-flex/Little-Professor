@@ -30,20 +30,19 @@ function generateRandomProblem() {
     if (operation === "+") {
         correctAnswer = num1 + num2;
     } else if (operation === "-") {
-        while (num1 <= num2) {
-            num1 = generateRandNum(currentMinNum, currentMaxNum);
-            num2 = generateRandNum(currentMinNum, currentMaxNum);
+        // Ensure num1 is always greater than or equal to num2
+        if (num1 < num2) {
+            [num1, num2] = [num2, num1];
         }
         correctAnswer = num1 - num2;
     } else if (operation === "*") {
         correctAnswer = num1 * num2;
     } else {
-        // Regenerate both numbers until they are perfectly divisible and num2 is not 0
-        while (num2 === 0 || num1 % num2 !== 0) {
-            num1 = generateRandNum(currentMinNum, currentMaxNum);
-            num2 = generateRandNum(currentMinNum, currentMaxNum);
-        }
-        correctAnswer = num1 / num2;
+        // Smart division: generate the answer and divisor first
+        num2 = generateRandNum(Math.max(1, currentMinNum), currentMaxNum);
+        let tempAnswer = generateRandNum(currentMinNum, currentMaxNum);
+        num1 = num2 * tempAnswer;
+        correctAnswer = tempAnswer;
     }
 
     return {
