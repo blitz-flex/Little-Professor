@@ -6,11 +6,12 @@ let totalQuestions = 10;
 let timeLeft = 60;
 let timerInterval;
 let isSubmitting = false; // Flag to prevent multiple submissions
+let currentMinNum = 0;
+let currentMaxNum = 10;
+let streak = 0;
 
-function generateRandNum(level) {
-    if (level == 1) return Math.floor(Math.random() * 10);
-    if (level == 2) return Math.floor(Math.random() * 11) + 10; // Level 2: 10-20
-    return Math.floor(Math.random() * 11) + 20;  // Level 3: 20-30
+function generateRandNum(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function generateRandomOperation() {
@@ -18,9 +19,9 @@ function generateRandomOperation() {
     return operations[Math.floor(Math.random() * operations.length)];
 }
 
-function generateRandomProblem(level) {
-    let num1 = generateRandNum(level);
-    let num2 = generateRandNum(level);
+function generateRandomProblem() {
+    let num1 = generateRandNum(currentMinNum, currentMaxNum);
+    let num2 = generateRandNum(currentMinNum, currentMaxNum);
     const operation = generateRandomOperation();
 
     let correctAnswer;
@@ -28,8 +29,8 @@ function generateRandomProblem(level) {
         correctAnswer = num1 + num2;
     } else if (operation === "-") {
         while (num1 <= num2) {
-            num1 = generateRandNum(level);
-            num2 = generateRandNum(level);
+            num1 = generateRandNum(currentMinNum, currentMaxNum);
+            num2 = generateRandNum(currentMinNum, currentMaxNum);
         }
         correctAnswer = num1 - num2;
     } else if (operation === "*") {
@@ -37,8 +38,8 @@ function generateRandomProblem(level) {
     } else {
         // Regenerate both numbers until they are perfectly divisible and num2 is not 0
         while (num2 === 0 || num1 % num2 !== 0) {
-            num1 = generateRandNum(level);
-            num2 = generateRandNum(level);
+            num1 = generateRandNum(currentMinNum, currentMaxNum);
+            num2 = generateRandNum(currentMinNum, currentMaxNum);
         }
         correctAnswer = num1 / num2;
     }
@@ -59,14 +60,21 @@ function startGame() {
     // Get selected level
     const level = parseInt(document.getElementById("level").value);
 
-    // Set time based on level
+    // Set time and initial range based on level
     if (level === 1) {
         timeLeft = 60;
+        currentMinNum = 0;
+        currentMaxNum = 10;
     } else if (level === 2) {
         timeLeft = 120;
+        currentMinNum = 10;
+        currentMaxNum = 20;
     } else {
         timeLeft = 180;
+        currentMinNum = 20;
+        currentMaxNum = 30;
     }
+    streak = 0;
 
     // Show game elements
     document.getElementById("game-elements").style.display = "block";
@@ -88,7 +96,7 @@ function startGame() {
     document.getElementById("time-left").textContent = timeLeft;
 
     // Generate the first problem immediately
-    generateProblem(level);
+    generateProblem();
     // Start the timer
     startTimer();
 }
@@ -101,13 +109,13 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
-function generateProblem(level) {
+function generateProblem() {
     if (totalQuestions === 0) {
         endGame();
         return;
     }
 
-    const { problem, answer } = generateRandomProblem(level);
+    const { problem, answer } = generateRandomProblem();
     currentProblem = problem;
     currentAnswer = answer;
     currentAttempts = 0;
@@ -163,8 +171,7 @@ function submitAnswer() {
 
         // Clear "Correct!" message and move to next problem after animation
         setTimeout(() => {
-            const level = parseInt(document.getElementById("level").value);
-            generateProblem(level);
+            generateProblem();
             isSubmitting = false; // Reset flag after moving to next problem
         }, 800);
     } else {
@@ -178,8 +185,7 @@ function submitAnswer() {
 
             // Clear feedback and move to next problem after showing the answer
             setTimeout(() => {
-                const level = parseInt(document.getElementById("level").value);
-                generateProblem(level);
+                generateProblem();
                 isSubmitting = false; // Reset flag after moving to next problem
             }, 2500);
         } else {
