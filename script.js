@@ -8,6 +8,8 @@ let timerInterval;
 let isSubmitting = false; // Flag to prevent multiple submissions
 let currentMinNum = 0;
 let currentMaxNum = 10;
+let initialMinNum = 0;
+let initialMaxNum = 10;
 let streak = 0;
 
 function generateRandNum(min, max) {
@@ -74,6 +76,8 @@ function startGame() {
         currentMinNum = 20;
         currentMaxNum = 30;
     }
+    initialMinNum = currentMinNum;
+    initialMaxNum = currentMaxNum;
     streak = 0;
 
     // Show game elements
@@ -163,6 +167,16 @@ function submitAnswer() {
 
     if (userAnswer === currentAnswer) {
         score++;
+        streak++;
+
+        // Adaptive difficulty: Increase challenge after a streak of 2 correct answers
+        if (streak >= 2) {
+            currentMaxNum += 3;
+            currentMinNum += 1;
+            streak = 0;
+            console.log(`Difficulty increased! Range: ${currentMinNum} - ${currentMaxNum}`);
+        }
+
         feedbackElement.textContent = "Correct!";
         feedbackElement.className = "feedback correct";
 
@@ -176,12 +190,18 @@ function submitAnswer() {
         }, 800);
     } else {
         currentAttempts++;
+        streak = 0; // Reset streak on any mistake
+
         feedbackElement.textContent = `Incorrect! Try again (${3 - currentAttempts} attempts left).`;
         feedbackElement.className = "feedback incorrect";
 
         if (currentAttempts === 3) {
             feedbackElement.textContent = `Incorrect! ${currentProblem} = ${currentAnswer} `;
             feedbackElement.className = "feedback incorrect";
+
+            // Adaptive difficulty: Slightly decrease difficulty on total failure
+            currentMaxNum = Math.max(currentMaxNum - 2, initialMaxNum);
+            currentMinNum = Math.max(currentMinNum - 1, initialMinNum);
 
             // Clear feedback and move to next problem after showing the answer
             setTimeout(() => {
