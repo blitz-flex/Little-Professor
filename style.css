@@ -31,7 +31,8 @@ h1 {
     gap: 1rem;
 }
 
-.score, .selected-level {
+.score,
+.selected-level {
     font-size: 1.1rem;
     color: #cbd5e1;
     margin-bottom: 1rem;
@@ -51,8 +52,15 @@ h1 {
 
 /* Problem appear animation */
 @keyframes problemAppear {
-    0% { transform: scale(0.8); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .problem-appear {
@@ -81,7 +89,27 @@ h1 {
     background: rgba(167, 139, 250, 0.1);
 }
 
-select, input, button {
+.difficulty-up {
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.1);
+    animation: levelUpBounce 0.5s ease;
+}
+
+@keyframes levelUpBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+select,
+input,
+button {
     font-size: 1.1rem;
     padding: 1rem 1.5rem;
     width: 100%;
@@ -93,7 +121,8 @@ select, input, button {
     transition: all 0.2s ease;
 }
 
-select:focus, input:focus {
+select:focus,
+input:focus {
     border-color: #60a5fa;
     outline: none;
     box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
@@ -104,16 +133,16 @@ button {
     border: none;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease-in-out; 
+    transition: all 0.3s ease-in-out;
 }
 
 button:hover {
     background: #3b82f6;
-    transform: scale(1.03); 
+    transform: scale(1.03);
 }
 
 button:active {
-    transform: scale(0.95); 
+    transform: scale(0.95);
 }
 
 #start {
@@ -129,7 +158,7 @@ button:active {
 button:disabled {
     background: #475569;
     cursor: not-allowed;
-    transform: none; 
+    transform: none;
 }
 
 #answer {
@@ -149,24 +178,45 @@ button:disabled {
 .timer {
     font-size: 1.1rem;
     color: #cbd5e1;
-    margin-top: 1rem; /* Add margin-top */
+    margin-top: 1rem;
+    /* Add margin-top */
 }
 
 /* Animation classes for end game */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 @keyframes confetti {
-    0% { background-position: 0 0; }
-    100% { background-position: 100% 100%; }
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 100% 100%;
+    }
 }
 
 .result-container {
@@ -185,10 +235,10 @@ button:disabled {
     height: 100%;
     pointer-events: none;
     z-index: -1;
-    background-image: 
-        radial-gradient(circle, #4ade80 1px, transparent 1px),
-        radial-gradient(circle, #60a5fa 1px, transparent 1px),
-        radial-gradient(circle, #f472b6 1px, transparent 1px);
+    background-image:
+            radial-gradient(circle, #4ade80 1px, transparent 1px),
+            radial-gradient(circle, #60a5fa 1px, transparent 1px),
+            radial-gradient(circle, #f472b6 1px, transparent 1px);
     background-size: 30px 30px;
     animation: confetti 10s linear infinite;
     opacity: 0.5;
@@ -215,11 +265,13 @@ button:disabled {
         box-shadow: 0 0 0 rgba(74, 222, 128, 0);
         border-color: rgba(255, 255, 255, 0.1);
     }
+
     50% {
         transform: scale(1.05);
         box-shadow: 0 0 30px rgba(74, 222, 128, 0.8), 0 0 60px rgba(74, 222, 128, 0.4);
         border-color: rgba(74, 222, 128, 0.8);
     }
+
     100% {
         transform: scale(1);
         box-shadow: 0 0 0 rgba(74, 222, 128, 0);
@@ -257,6 +309,7 @@ button:disabled {
         opacity: 1;
         transform: translate(0, 0) scale(1);
     }
+
     100% {
         opacity: 0;
         transform: translate(var(--tx), var(--ty)) scale(0);
@@ -265,15 +318,20 @@ button:disabled {
 
 /* Shimmer effect for excellent score */
 @keyframes shimmer {
-    0% { background-position: -1000px 0; }
-    100% { background-position: 1000px 0; }
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
 }
 
 .shimmer-text {
     background: linear-gradient(90deg, #f8fafc 0%, #4ade80 50%, #60a5fa 75%, #f8fafc 100%);
     background-size: 1000px 100%;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shimmer 3s infinite;
 }
-

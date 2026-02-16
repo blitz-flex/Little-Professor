@@ -168,16 +168,23 @@ function submitAnswer() {
         score++;
         streak++;
 
+        let isLevelUp = false;
         // Adaptive difficulty: Increase challenge after a streak of 2 correct answers
         if (streak >= 2) {
             currentMaxNum += 3;
             currentMinNum += 1;
             streak = 0;
+            isLevelUp = true;
             console.log(`Difficulty increased! Range: ${currentMinNum} - ${currentMaxNum}`);
         }
 
-        feedbackElement.textContent = "Correct!";
-        feedbackElement.className = "feedback correct";
+        if (isLevelUp) {
+            feedbackElement.textContent = "Correct! Level Up!";
+            feedbackElement.className = "feedback difficulty-up";
+        } else {
+            feedbackElement.textContent = "Correct!";
+            feedbackElement.className = "feedback correct";
+        }
 
         // Add correct answer animation
         addCorrectAnswerEffect();
@@ -335,7 +342,7 @@ function endGame() {
     let messageClass = "";
 
     if (percentage >= 70) {
-        message = "🎉 Excellent work! 🎉";
+        message = "Excellent work!";
         messageClass = "shimmer-text";
     } else if (percentage >= 50) {
         message = "Good effort! Try again to improve!";
