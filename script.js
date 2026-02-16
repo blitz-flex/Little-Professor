@@ -84,9 +84,6 @@ function startGame() {
     document.getElementById("start").style.display = "none";
     document.getElementById("level").style.display = "none";
 
-    document.getElementById("answer").disabled = false;
-    document.getElementById("submit").disabled = false;
-
     // Reset score and feedback
     document.querySelector(".score").textContent = `Score: 0`;
     document.querySelector(".feedback").textContent = "";
@@ -103,14 +100,6 @@ function startGame() {
     // Start the timer
     startTimer();
 }
-
-// Add keyboard support for submitting answers
-document.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-        // Trigger the submitAnswer function when Enter is pressed
-        submitAnswer();
-    }
-});
 
 function generateProblem() {
     if (totalQuestions === 0) {
@@ -142,24 +131,51 @@ function generateProblem() {
     feedbackElement.textContent = "";
     feedbackElement.className = "feedback";
 
-    document.getElementById("answer").value = "";
-    document.getElementById("answer").focus();
+    generateOptions();
 }
 
-function submitAnswer() {
+function generateOptions() {
+    const optionsContainer = document.getElementById("options-container");
+    optionsContainer.innerHTML = "";
+
+    const options = [currentAnswer];
+    while (options.length < 4) {
+        let distractor;
+        const offset = generateRandNum(1, 10);
+        distractor = Math.random() > 0.5 ? currentAnswer + offset : currentAnswer - offset;
+
+        if (distractor !== currentAnswer && !options.includes(distractor)) {
+            options.push(distractor);
+        }
+    }
+
+    // Shuffle options
+    options.sort(() => Math.random() - 0.5);
+
+    const labels = ["A", "B", "C", "D"];
+    options.forEach((opt, index) => {
+        const button = document.createElement("button");
+        button.className = "option-btn";
+        button.innerHTML = `
+            <span class="option-label">${labels[index]}</span>
+            <span class="option-value">${opt}</span>
+        `;
+        button.onclick = () => submitAnswer(opt);
+        optionsContainer.appendChild(button);
+    });
+}
+
+function submitAnswer(userAnswer) {
     // Prevent multiple submissions
     if (isSubmitting) {
         return;
     }
 
     const feedbackElement = document.querySelector(".feedback");
-    const userAnswer = parseInt(document.getElementById("answer").value);
+    const optionButtons = document.querySelectorAll(".option-btn");
 
-    if (isNaN(userAnswer)) {
-        feedbackElement.textContent = "Please enter a valid number.";
-        feedbackElement.className = "feedback invalid";
-        return;
-    }
+    // Disable all buttons after choice
+    optionButtons.forEach(btn => btn.disabled = true);
 
     // Set flag to prevent additional submissions
     isSubmitting = true;
@@ -195,29 +211,20 @@ function submitAnswer() {
             isSubmitting = false; // Reset flag after moving to next problem
         }, 800);
     } else {
-        currentAttempts++;
         streak = 0; // Reset streak on any mistake
 
-        feedbackElement.textContent = `Incorrect! Try again (${3 - currentAttempts} attempts left).`;
+        // Reset difficulty to minimum immediately on any mistake
+        currentMaxNum = initialMaxNum;
+        currentMinNum = initialMinNum;
+
+        feedbackElement.textContent = `Incorrect! ${currentProblem} = ${currentAnswer}`;
         feedbackElement.className = "feedback incorrect";
 
-        if (currentAttempts === 3) {
-            feedbackElement.textContent = `Incorrect! ${currentProblem} = ${currentAnswer} `;
-            feedbackElement.className = "feedback incorrect";
-
-            // Adaptive difficulty: Slightly decrease difficulty on total failure
-            currentMaxNum = Math.max(currentMaxNum - 2, initialMaxNum);
-            currentMinNum = Math.max(currentMinNum - 1, initialMinNum);
-
-            // Clear feedback and move to next problem after showing the answer
-            setTimeout(() => {
-                generateProblem();
-                isSubmitting = false; // Reset flag after moving to next problem
-            }, 2500);
-        } else {
-            // If not the final attempt, allow next submission
+        // Move to next problem immediately after showing the answer for a short period
+        setTimeout(() => {
+            generateProblem();
             isSubmitting = false;
-        }
+        }, 2000);
     }
 
     document.querySelector(".score").textContent = `Score: ${score}`;
@@ -308,8 +315,6 @@ function endGame() {
     }
 
     // Hide game interaction elements
-    document.getElementById("answer").disabled = true;
-    document.getElementById("submit").disabled = true;
     document.getElementById("game-elements").style.display = "none";
 
     // Calculate percentage

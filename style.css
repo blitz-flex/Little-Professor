@@ -161,14 +161,63 @@ button:disabled {
     transform: none;
 }
 
-#answer {
-    width: calc(100% - 3rem);
-    text-align: center;
-    font-size: 1.4rem;
-    background: #1e293b;
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.option-btn {
+    background: #334155;
+    border: 2px solid #475569;
+    padding: 1rem;
+    border-radius: 14px;
+    color: #f8fafc;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    margin: 0;
+}
+
+.option-btn:hover:not(:disabled) {
+    background: #475569;
+    border-color: #60a5fa;
+    transform: translateY(-2px);
+}
+
+.option-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.option-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.option-label {
+    background: #60a5fa;
+    color: #1e293b;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 
 @media (max-width: 480px) {
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+
     .calculator-container {
         width: 85%;
         padding: 2rem;
@@ -236,9 +285,9 @@ button:disabled {
     pointer-events: none;
     z-index: -1;
     background-image:
-            radial-gradient(circle, #4ade80 1px, transparent 1px),
-            radial-gradient(circle, #60a5fa 1px, transparent 1px),
-            radial-gradient(circle, #f472b6 1px, transparent 1px);
+        radial-gradient(circle, #4ade80 1px, transparent 1px),
+        radial-gradient(circle, #60a5fa 1px, transparent 1px),
+        radial-gradient(circle, #f472b6 1px, transparent 1px);
     background-size: 30px 30px;
     animation: confetti 10s linear infinite;
     opacity: 0.5;
