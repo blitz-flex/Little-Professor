@@ -10,6 +10,8 @@ let currentMinNum = 0;
 let currentMaxNum = 10;
 let initialMinNum = 0;
 let initialMaxNum = 10;
+let lastAnswer = null;
+let currentTier = 0;
 let streak = 0;
 
 function generateRandNum(min, max) {
@@ -17,29 +19,64 @@ function generateRandNum(min, max) {
 }
 
 function generateRandomOperation() {
-    const operations = ["+", "-", "*", "/"];
+    let operations = ["+", "-"];
+    if (currentTier >= 1) operations.push("*");
+    if (currentTier >= 2) operations.push("/");
     return operations[Math.floor(Math.random() * operations.length)];
 }
 
 function generateRandomProblem() {
-    let num1 = generateRandNum(currentMinNum, currentMaxNum);
-    let num2 = generateRandNum(currentMinNum, currentMaxNum);
-    const operation = generateRandomOperation();
+    let num1;
+    // Chaining: Probability increases with tier
+    const chainChance = currentTier >= 2 ? 0.7 : 0.3;
+    if (streak >= 1 && lastAnswer !== null && Math.random() < chainChance && lastAnswer < currentMaxNum * 2) {
+        num1 = lastAnswer;
+    } else {
+        num1 = generateRandNum(currentMinNum, currentMaxNum);
+    }
 
+    let num2 = generateRandNum(currentMinNum, currentMaxNum);
+
+    // Advanced Complexity: 3 Operands at Tier 3+ (Always)
+    if (currentTier >= 3) {
+        let op1 = generateRandomOperation();
+        let op2 = generateRandomOperation();
+        // Skip division for 3-part chain for now
+        if (op1 === "/") op1 = "+";
+        if (op2 === "/") op2 = "*";
+
+        let n1 = num1, n2 = num2, n3 = generateRandNum(currentMinNum, Math.floor(currentMaxNum / 2));
+        if (op1 === "-" && n1 < n2) [n1, n2] = [n2, n1];
+
+        let intermediate;
+        if (op1 === "+") intermediate = n1 + n2;
+        else if (op1 === "-") intermediate = n1 - n2;
+        else intermediate = n1 * n2;
+
+        if (op2 === "-" && intermediate < n3) [intermediate, n3] = [n3, intermediate];
+
+        let finalResult;
+        if (op2 === "+") finalResult = intermediate + n3;
+        else if (op2 === "-") finalResult = intermediate - n3;
+        else finalResult = intermediate * n3;
+
+        return {
+            problem: `(${n1} ${op1} ${n2}) ${op2} ${n3}`,
+            answer: finalResult
+        };
+    }
+
+    const operation = generateRandomOperation();
     let correctAnswer;
     if (operation === "+") {
         correctAnswer = num1 + num2;
     } else if (operation === "-") {
-        // Ensure num1 is always greater than or equal to num2
-        if (num1 < num2) {
-            [num1, num2] = [num2, num1];
-        }
+        if (num1 < num2) [num1, num2] = [num2, num1];
         correctAnswer = num1 - num2;
     } else if (operation === "*") {
         correctAnswer = num1 * num2;
     } else {
-        // Smart division: generate the answer and divisor first
-        num2 = generateRandNum(Math.max(1, currentMinNum), currentMaxNum);
+        num2 = generateRandNum(Math.max(1, Math.floor(currentMinNum / 2)), Math.max(2, Math.floor(currentMaxNum / 2)));
         let tempAnswer = generateRandNum(currentMinNum, currentMaxNum);
         num1 = num2 * tempAnswer;
         correctAnswer = tempAnswer;
@@ -57,6 +94,8 @@ function startGame() {
     totalQuestions = 10;
     isSubmitting = false; // Reset flag at game start
     gameEnded = false; // Reset game ended flag
+    lastAnswer = null;
+    currentTier = 0;
 
     // Get selected level
     const level = parseInt(document.getElementById("level").value);
@@ -110,6 +149,7 @@ function generateProblem() {
     const { problem, answer } = generateRandomProblem();
     currentProblem = problem;
     currentAnswer = answer;
+    lastAnswer = answer; // Save for next potential chain
     currentAttempts = 0;
     totalQuestions--;
 
@@ -185,17 +225,24 @@ function submitAnswer(userAnswer) {
         streak++;
 
         let isLevelUp = false;
-        // Adaptive difficulty: Increase challenge after a streak of 2 correct answers
+
+        // Continuous range scaling: every correct answer makes it slightly harder
+        if (currentTier >= 1) {
+            currentMaxNum += 2;
+        }
+
+        // Tier Up logic: Faster progression (every 2 correct answers)
         if (streak >= 2) {
-            currentMaxNum += 3;
-            currentMinNum += 1;
+            currentTier++;
+            currentMaxNum += 8;
+            currentMinNum += 2;
             streak = 0;
             isLevelUp = true;
-            console.log(`Difficulty increased! Range: ${currentMinNum} - ${currentMaxNum}`);
+            console.log(`Tier Up! Tier: ${currentTier}, Range: ${currentMinNum}-${currentMaxNum}`);
         }
 
         if (isLevelUp) {
-            feedbackElement.textContent = "Correct! Level Up!";
+            feedbackElement.textContent = `Level Up! Complexity Tier ${currentTier} `;
             feedbackElement.className = "feedback difficulty-up";
         } else {
             feedbackElement.textContent = "Correct!";
@@ -212,6 +259,8 @@ function submitAnswer(userAnswer) {
         }, 800);
     } else {
         streak = 0; // Reset streak on any mistake
+        currentTier = 0; // Reset tier on mistake
+        lastAnswer = null; // Break the chain
 
         // Reset difficulty to minimum immediately on any mistake
         currentMaxNum = initialMaxNum;
