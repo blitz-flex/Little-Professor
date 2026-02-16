@@ -1,5 +1,7 @@
 # 🧮 Little Professor: Level Up Your Math Skills!
 
+![Little Professor Gameplay](https://i.imgur.com/HCPeQ3L.png)
+
 Little Professor is an addictive educational game that transforms boring math practice into an exciting challenge. Whether you're 8 or 80, get ready to sharpen your arithmetic skills and compete against yourself to reach the highest score!
 
 ##  **Why You'll Love It**
@@ -44,4 +46,3 @@ cd little-professor
 Pure HTML, CSS, and JavaScript – No frameworks, just fast, fun, and smart gameplay.
 
 ## 🎮 **[Start Playing Now](https://little-profesor.netlify.app/)**
-
