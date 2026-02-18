@@ -1,32 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"> 
-    <title>Little Professor</title>   
+    <link
+            href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet">
+    <title>Little Professor | Master Your Math</title>
 </head>
-<body>
-    <div class="calculator-container">
-        <h1>Little Professor</h1>
-        <select id="level">
-            <option value="1">Level 1</option>
-            <option value="2">Level 2</option>
-            <option value="3">Level 3</option>
-        </select>
-        <button id="start" onclick="startGame()">Start</button>
 
-        <!-- Hidden elements initially -->
-        <div id="game-elements" style="display: none;">
-            <div class="selected-level">Question: </div>
-            <div class="score">Score: 0</div>
-            <div class="problem"></div>
+<body>
+<div class="bg-decoration">
+    <div id="symbols-container"></div>
+</div>
+
+<main class="app-container">
+    <!-- Hero Section / Start Screen -->
+    <div id="start-screen" class="screen active">
+        <div class="hero-content">
+            <div class="logo-badge">🎓</div>
+            <h1>Little Professor</h1>
+            <p class="subtitle">Master the art of mental arithmetic and sharpen your cognitive agility through
+                high-precision mathematical challenges.</p>
+        </div>
+
+        <div class="level-selection">
+            <div class="levels-grid">
+                <div class="level-card selected" onclick="selectLevel(1, this)" data-level="1">
+                    <div class="level-info">
+                        <span class="level-name">Beginner</span>
+                    </div>
+                </div>
+                <div class="level-card" onclick="selectLevel(2, this)" data-level="2">
+                    <div class="level-info">
+                        <span class="level-name">Intermediate</span>
+                    </div>
+                </div>
+                <div class="level-card" onclick="selectLevel(3, this)" data-level="3">
+                    <div class="level-info">
+                        <span class="level-name">Professor</span>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="level" value="1">
+        </div>
+
+        <button id="start-btn" class="primary-btn" onclick="startGame()">Start Challenge</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="stat-pill">
+                <span class="label">QUESTION</span>
+                <span id="question-num" class="value">1 / 10</span>
+            </div>
+            <div class="stat-pill">
+                <span class="label">SCORE</span>
+                <span id="game-score" class="value">0</span>
+            </div>
+        </div>
+
+        <div class="game-body">
+            <div class="problem-card">
+                <div class="problem-text"></div>
+            </div>
+
             <div id="options-container" class="options-grid"></div>
-            <div class="feedback"></div>        
-            <div class="timer">Time left: <span id="time-left">60</span> seconds</div> 
+
+            <div class="feedback-area">
+                <div class="feedback"></div>
+            </div>
+        </div>
+
+        <div class="game-footer">
+            <div class="timer-container">
+                <div class="timer-bar-bg">
+                    <div id="timer-bar" class="timer-bar-fill"></div>
+                </div>
+                <div class="timer-text">Time left: <span id="time-left">60</span>s</div>
+            </div>
         </div>
     </div>
-    <script src="script.js"></script>
+</main>
+
+<script src="script.js"></script>
 </body>
+
 </html>

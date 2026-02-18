@@ -4,8 +4,9 @@ let currentAnswer;
 let currentAttempts = 0;
 let totalQuestions = 10;
 let timeLeft = 60;
+let initialTime = 60;
 let timerInterval;
-let isSubmitting = false; // Flag to prevent multiple submissions
+let isSubmitting = false;
 let currentMinNum = 0;
 let currentMaxNum = 10;
 let initialMinNum = 0;
@@ -13,6 +14,7 @@ let initialMaxNum = 10;
 let lastAnswer = null;
 let currentTier = 0;
 let streak = 0;
+let gameEnded = false;
 
 function generateRandNum(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -27,7 +29,6 @@ function generateRandomOperation() {
 
 function generateRandomProblem() {
     let num1;
-    // Chaining: Probability increases with tier
     const chainChance = currentTier >= 2 ? 0.7 : 0.3;
     if (streak >= 1 && lastAnswer !== null && Math.random() < chainChance && lastAnswer < currentMaxNum * 2) {
         num1 = lastAnswer;
@@ -37,11 +38,9 @@ function generateRandomProblem() {
 
     let num2 = generateRandNum(currentMinNum, currentMaxNum);
 
-    // Advanced Complexity: 3 Operands at Tier 3+ (Always)
     if (currentTier >= 3) {
         let op1 = generateRandomOperation();
         let op2 = generateRandomOperation();
-        // Skip division for 3-part chain for now
         if (op1 === "/") op1 = "+";
         if (op2 === "/") op2 = "*";
 
@@ -88,19 +87,24 @@ function generateRandomProblem() {
     };
 }
 
+function selectLevel(level, element) {
+    document.getElementById("level").value = level;
+    document.querySelectorAll(".level-card").forEach(card => card.classList.remove("selected"));
+    element.classList.add("selected");
+}
+
 function startGame() {
     score = 0;
     currentAttempts = 0;
     totalQuestions = 10;
-    isSubmitting = false; // Reset flag at game start
-    gameEnded = false; // Reset game ended flag
+    isSubmitting = false;
+    gameEnded = false;
     lastAnswer = null;
     currentTier = 0;
+    streak = 0;
 
-    // Get selected level
     const level = parseInt(document.getElementById("level").value);
 
-    // Set time and initial range based on level
     if (level === 1) {
         timeLeft = 60;
         currentMinNum = 0;
@@ -114,29 +118,22 @@ function startGame() {
         currentMinNum = 20;
         currentMaxNum = 30;
     }
+    initialTime = timeLeft;
     initialMinNum = currentMinNum;
     initialMaxNum = currentMaxNum;
-    streak = 0;
 
-    // Show game elements
-    document.getElementById("game-elements").style.display = "block";
-    document.getElementById("start").style.display = "none";
-    document.getElementById("level").style.display = "none";
+    // Switch screens
+    document.getElementById("start-screen").classList.remove("active");
+    document.getElementById("game-screen").classList.add("active");
 
-    // Reset score and feedback
-    document.querySelector(".score").textContent = `Score: 0`;
+    // Reset UI
+    document.getElementById("game-score").textContent = "0";
     document.querySelector(".feedback").textContent = "";
     document.querySelector(".feedback").className = "feedback";
-
-    // Display selected level
-    document.querySelector(".selected-level").textContent = `Question: 1`;
-
-    // Update timer display
     document.getElementById("time-left").textContent = timeLeft;
+    document.getElementById("timer-bar").style.width = "100%";
 
-    // Generate the first problem immediately
     generateProblem();
-    // Start the timer
     startTimer();
 }
 
@@ -149,24 +146,16 @@ function generateProblem() {
     const { problem, answer } = generateRandomProblem();
     currentProblem = problem;
     currentAnswer = answer;
-    lastAnswer = answer; // Save for next potential chain
+    lastAnswer = answer;
     currentAttempts = 0;
     totalQuestions--;
 
-    // Calculate current question number (10 - remaining = current)
     const currentQuestionNumber = 10 - totalQuestions;
-    document.querySelector(".selected-level").textContent = `Question: ${currentQuestionNumber}`;
+    document.getElementById("question-num").textContent = `${currentQuestionNumber} / 10`;
 
-    const problemElement = document.querySelector(".problem");
-    problemElement.textContent = `${problem}`;
+    const problemElement = document.querySelector(".problem-text");
+    problemElement.textContent = problem;
 
-    // Add animation class
-    problemElement.classList.remove("problem-appear");
-    // Trigger reflow to restart animation
-    void problemElement.offsetWidth;
-    problemElement.classList.add("problem-appear");
-
-    // Clear feedback message when moving to new problem
     const feedbackElement = document.querySelector(".feedback");
     feedbackElement.textContent = "";
     feedbackElement.className = "feedback";
@@ -189,7 +178,6 @@ function generateOptions() {
         }
     }
 
-    // Shuffle options
     options.sort(() => Math.random() - 0.5);
 
     const labels = ["A", "B", "C", "D"];
@@ -206,18 +194,12 @@ function generateOptions() {
 }
 
 function submitAnswer(userAnswer) {
-    // Prevent multiple submissions
-    if (isSubmitting) {
-        return;
-    }
+    if (isSubmitting) return;
 
     const feedbackElement = document.querySelector(".feedback");
     const optionButtons = document.querySelectorAll(".option-btn");
 
-    // Disable all buttons after choice
     optionButtons.forEach(btn => btn.disabled = true);
-
-    // Set flag to prevent additional submissions
     isSubmitting = true;
 
     if (userAnswer === currentAnswer) {
@@ -225,286 +207,132 @@ function submitAnswer(userAnswer) {
         streak++;
 
         let isLevelUp = false;
-
-        // Continuous range scaling: every correct answer makes it slightly harder
-        if (currentTier >= 1) {
-            currentMaxNum += 2;
-        }
-
-        // Tier Up logic: Faster progression (every 2 correct answers)
+        if (currentTier >= 1) currentMaxNum += 2;
         if (streak >= 2) {
             currentTier++;
             currentMaxNum += 8;
             currentMinNum += 2;
             streak = 0;
             isLevelUp = true;
-            console.log(`Tier Up! Tier: ${currentTier}, Range: ${currentMinNum}-${currentMaxNum}`);
         }
 
         if (isLevelUp) {
-            feedbackElement.textContent = `Level Up! Complexity Tier ${currentTier} `;
+            feedbackElement.textContent = `Level Up! Complexity Tier ${currentTier}`;
             feedbackElement.className = "feedback difficulty-up";
         } else {
             feedbackElement.textContent = "Correct!";
             feedbackElement.className = "feedback correct";
         }
 
-        // Add correct answer animation
-        addCorrectAnswerEffect();
+        document.querySelector(".problem-card").classList.add("correct-answer-animation");
 
-        // Clear "Correct!" message and move to next problem after animation
         setTimeout(() => {
+            document.querySelector(".problem-card").classList.remove("correct-answer-animation");
             generateProblem();
-            isSubmitting = false; // Reset flag after moving to next problem
+            isSubmitting = false;
         }, 800);
     } else {
-        streak = 0; // Reset streak on any mistake
-        currentTier = 0; // Reset tier on mistake
-        lastAnswer = null; // Break the chain
-
-        // Reset difficulty to minimum immediately on any mistake
+        streak = 0;
+        currentTier = 0;
+        lastAnswer = null;
         currentMaxNum = initialMaxNum;
         currentMinNum = initialMinNum;
 
         feedbackElement.textContent = `Incorrect! ${currentProblem} = ${currentAnswer}`;
         feedbackElement.className = "feedback incorrect";
 
-        // Move to next problem immediately after showing the answer for a short period
         setTimeout(() => {
             generateProblem();
             isSubmitting = false;
         }, 2000);
     }
 
-    document.querySelector(".score").textContent = `Score: ${score}`;
+    document.getElementById("game-score").textContent = score;
 }
 
-// Add visual effect for correct answers
-function addCorrectAnswerEffect() {
-    const problemElement = document.querySelector(".problem");
 
-    // Add glow animation to problem element
-    problemElement.classList.add("correct-answer-animation");
-    setTimeout(() => {
-        problemElement.classList.remove("correct-answer-animation");
-    }, 600);
-
-    // Create confetti burst
-    createConfettiBurst();
-}
-
-// Create simple confetti burst effect
-function createConfettiBurst() {
-    const problemElement = document.querySelector(".problem");
-    const rect = problemElement.getBoundingClientRect();
-    const calculatorContainer = document.querySelector(".calculator-container");
-    const containerRect = calculatorContainer.getBoundingClientRect();
-
-    // Center position of problem element
-    const centerX = rect.left - containerRect.left + rect.width / 2;
-    const centerY = rect.top - containerRect.top + rect.height / 2;
-
-    const colors = ["#4ade80", "#60a5fa", "#fbbf24", "#f472b6"];
-    const shapes = ["circle", "square"];
-
-    // Create 12 confetti pieces
-    for (let i = 0; i < 12; i++) {
-        const confetti = document.createElement("div");
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        const shape = shapes[Math.floor(Math.random() * shapes.length)];
-        const size = Math.random() * 8 + 6;
-
-        confetti.style.position = "absolute";
-        confetti.style.left = centerX + "px";
-        confetti.style.top = centerY + "px";
-        confetti.style.width = size + "px";
-        confetti.style.height = size + "px";
-        confetti.style.backgroundColor = color;
-        confetti.style.borderRadius = shape === "circle" ? "50%" : "2px";
-        confetti.style.pointerEvents = "none";
-        confetti.style.zIndex = "100";
-
-        // Calculate direction
-        const angle = (Math.PI * 2 * i) / 12;
-        const distance = Math.random() * 80 + 60;
-        const tx = Math.cos(angle) * distance;
-        const ty = Math.sin(angle) * distance - 30; // Slight upward bias
-
-        confetti.animate(
-            [
-                { transform: "translate(0, 0) rotate(0deg)", opacity: 1 },
-                { transform: `translate(${tx}px, ${ty}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-            ],
-            {
-                duration: 800,
-                easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)"
-            }
-        );
-
-        calculatorContainer.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 800);
-    }
-}
-
-let gameEnded = false; // Add flag to prevent multiple calls
 
 function endGame() {
-    // Check if game already ended
-    if (gameEnded) {
-        return;
-    }
-
+    if (gameEnded) return;
     gameEnded = true;
     clearInterval(timerInterval);
 
-    // Prevent multiple calls to endGame
-    if (document.querySelector(".result-container")) {
-        // Exit if result container already exists
-        return;
-    }
+    document.getElementById("game-screen").classList.remove("active");
 
-    // Hide game interaction elements
-    document.getElementById("game-elements").style.display = "none";
-
-    // Calculate percentage
     const percentage = (score / 10) * 100;
-
-    // Create fireworks container if score is 70% or higher
-    let fireworksContainer;
-    if (percentage >= 70) {
-        fireworksContainer = document.createElement("div");
-        fireworksContainer.className = "fireworks-container";
-        document.querySelector(".calculator-container").appendChild(fireworksContainer);
-
-        // Launch fireworks continuously for 5 seconds
-        launchFireworks(fireworksContainer);
-    }
-
-    // Create celebration effect for lower scores
-    if (percentage < 70) {
-        const celebration = document.createElement("div");
-        celebration.className = "celebration";
-        document.querySelector(".calculator-container").appendChild(celebration);
-    }
-
-    // Create a result container
     const resultContainer = document.createElement("div");
-    resultContainer.className = "result-container";
+    resultContainer.className = "result-container screen active";
 
-    // Add different messages based on score percentage
     let message = "";
     let messageClass = "";
-
     if (percentage >= 70) {
         message = "Excellent work!";
         messageClass = "shimmer-text";
+        launchFireworks();
     } else if (percentage >= 50) {
-        message = "Good effort! Try again to improve!";
+        message = "Good effort! Try again!";
     } else {
-        message = "Keep practicing! You can do better!";
+        message = "Keep practicing!";
     }
 
     resultContainer.innerHTML = `
         <h2 class="${messageClass}">Game Over!</h2>
-        <p class="${messageClass}">${message}</p>
-        <p>Final Score: <span class="score-animation">${score} / 10 (${percentage}%)</span></p>
-        <button id="try-again" class="try-again-btn-animation">Try Again</button>
+        <p class="subtitle">${message}</p>
+        <div class="stat-pill" style="min-width: 200px; margin: 1rem 0;">
+            <span class="label">FINAL SCORE</span>
+            <span class="value">${score} / 10 (${percentage}%)</span>
+        </div>
+        <button id="try-again" class="primary-btn">Try Again</button>
     `;
 
-    // Add styling to the result container
-    resultContainer.style.textAlign = "center";
-    resultContainer.style.color = "#f8fafc";
-    resultContainer.querySelector("h2").style.fontSize = "2rem";
-    resultContainer.querySelectorAll("p").forEach(p => {
-        p.style.fontSize = "1.5rem";
-    });
-
-    const tryAgainButton = resultContainer.querySelector("#try-again");
-    tryAgainButton.style.backgroundColor = "#4ade80";
-    tryAgainButton.style.border = "none";
-    tryAgainButton.style.padding = "1rem 1.5rem";
-    tryAgainButton.style.borderRadius = "14px";
-    tryAgainButton.style.marginTop = "1rem";
-    tryAgainButton.style.cursor = "pointer";
-
-    // Add click event to try again button
-    tryAgainButton.onclick = () => {
-        // Stop the timer completely
-        clearInterval(timerInterval);
-
-        // Reset gameEnded flag
-        gameEnded = false;
-
-        // Remove result container and celebration/fireworks
+    resultContainer.querySelector("#try-again").onclick = () => {
         resultContainer.remove();
-        if (document.querySelector(".celebration")) {
-            document.querySelector(".celebration").remove();
+        if (document.querySelector(".fireworks-container")) {
+            document.querySelector(".fireworks-container").remove();
         }
-        if (fireworksContainer) {
-            fireworksContainer.remove();
-        }
-
-        // Show start and level elements
-        document.getElementById("start").style.display = "block";
-        document.getElementById("level").style.display = "block";
+        document.getElementById("start-screen").classList.add("active");
     };
 
-    // Add result container to the calculator container
-    document.querySelector(".calculator-container").appendChild(resultContainer);
+    document.querySelector(".app-container").appendChild(resultContainer);
 }
 
-// Launch fireworks animation
-function launchFireworks(container) {
-    let fireworkCount = 0;
-    const maxFireworks = 20;
+function launchFireworks() {
+    const container = document.createElement("div");
+    container.className = "fireworks-container";
+    document.body.appendChild(container);
 
-    const fireworkInterval = setInterval(() => {
-        if (fireworkCount >= maxFireworks) {
-            clearInterval(fireworkInterval);
-            return;
-        }
-
+    let count = 0;
+    const interval = setInterval(() => {
+        if (count >= 15) return clearInterval(interval);
         createFirework(container);
-        fireworkCount++;
-    }, 300);
+        count++;
+    }, 400);
 }
 
-// Create a single firework explosion
 function createFirework(container) {
-    const colors = ["#4ade80", "#60a5fa", "#f472b6", "#a78bfa", "#fbbf24", "#fb923c"];
+    const colors = ["#4ade80", "#60a5fa", "#f472b6", "#a78bfa", "#fbbf24"];
     const color = colors[Math.floor(Math.random() * colors.length)];
+    const x = Math.random() * 80 + 10;
+    const y = Math.random() * 50 + 20;
 
-    // Random position
-    const x = Math.random() * 100;
-    const y = Math.random() * 60 + 20; // Keep in middle-upper area
-
-    // Create multiple particles for explosion effect
-    const particleCount = 30;
-
-    for (let i = 0; i < particleCount; i++) {
+    for (let i = 0; i < 20; i++) {
         const particle = document.createElement("div");
         particle.className = "firework";
         particle.style.backgroundColor = color;
         particle.style.left = x + "%";
         particle.style.top = y + "%";
 
-        // Calculate random direction for explosion
-        const angle = (Math.PI * 2 * i) / particleCount;
+        const angle = (Math.PI * 2 * i) / 20;
         const velocity = Math.random() * 100 + 50;
         const tx = Math.cos(angle) * velocity;
         const ty = Math.sin(angle) * velocity;
 
         particle.style.setProperty('--tx', tx + 'px');
         particle.style.setProperty('--ty', ty + 'px');
-
-        particle.style.animation = `fireworkExplode ${Math.random() * 0.5 + 1}s ease-out forwards`;
+        particle.style.animation = `fireworkExplode 1s ease-out forwards`;
 
         container.appendChild(particle);
-
-        // Remove particle after animation
-        setTimeout(() => {
-            particle.remove();
-        }, 1500);
+        setTimeout(() => particle.remove(), 1000);
     }
 }
 
@@ -513,9 +341,37 @@ function startTimer() {
         timeLeft--;
         document.getElementById("time-left").textContent = timeLeft;
 
-        if (timeLeft === 0) {
+        const progress = (timeLeft / initialTime) * 100;
+        document.getElementById("timer-bar").style.width = `${progress}%`;
+
+        if (timeLeft <= 0) {
             endGame();
         }
     }, 1000);
 }
 
+function initBackground() {
+    const container = document.getElementById("symbols-container");
+    const symbols = ["+", "−", "×", "÷", "=", "∑", "π", "∞", "√"];
+
+    for (let i = 0; i < 20; i++) {
+        const symbol = document.createElement("div");
+        symbol.className = "bg-symbol";
+        symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+
+        symbol.style.left = Math.random() * 100 + "vw";
+        symbol.style.top = Math.random() * 100 + "vh";
+        symbol.style.fontSize = Math.random() * 20 + 20 + "px";
+        symbol.style.animationDuration = Math.random() * 10 + 15 + "s";
+        symbol.style.animationDelay = Math.random() * -20 + "s";
+
+        container.appendChild(symbol);
+    }
+}
+
+// Initial state
+document.addEventListener("DOMContentLoaded", () => {
+    initBackground();
+    const firstLevel = document.querySelector(".level-card");
+    if (firstLevel) selectLevel(1, firstLevel);
+});
