@@ -268,7 +268,6 @@ function endGame() {
     if (percentage >= 70) {
         message = "Excellent work!";
         messageClass = "shimmer-text";
-        launchFireworks();
     } else if (percentage >= 50) {
         message = "Good effort! Try again!";
     } else {
@@ -287,53 +286,110 @@ function endGame() {
 
     resultContainer.querySelector("#try-again").onclick = () => {
         resultContainer.remove();
-        if (document.querySelector(".fireworks-container")) {
-            document.querySelector(".fireworks-container").remove();
+        const activeFireworks = document.getElementById("active-fireworks");
+        if (activeFireworks) {
+            activeFireworks.remove();
         }
         document.getElementById("start-screen").classList.add("active");
     };
 
     document.querySelector(".app-container").appendChild(resultContainer);
+
+    if (percentage >= 70) {
+        launchFireworks(resultContainer);
+    }
 }
 
-function launchFireworks() {
+function launchFireworks(parent) {
     const container = document.createElement("div");
     container.className = "fireworks-container";
-    document.body.appendChild(container);
+    container.id = "active-fireworks";
+    parent.appendChild(container);
 
-    let count = 0;
-    const interval = setInterval(() => {
-        if (count >= 15) return clearInterval(interval);
-        createFirework(container);
-        count++;
-    }, 400);
+    function scheduleFirework() {
+        if (!document.getElementById("active-fireworks")) return;
+
+        const x = Math.random() * 80 + 10;
+        const targetY = Math.random() * 50 + 10; // % of parent card
+        const duration = Math.random() * 0.5 + 0.8;
+
+        createRocket(container, x, targetY, duration);
+
+        setTimeout(scheduleFirework, Math.random() * 400 + 400);
+    }
+
+    scheduleFirework();
 }
 
-function createFirework(container) {
-    const colors = ["#4ade80", "#60a5fa", "#f472b6", "#a78bfa", "#fbbf24"];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    const x = Math.random() * 80 + 10;
-    const y = Math.random() * 50 + 20;
+function createRocket(container, x, targetY, duration) {
+    const rocket = document.createElement("div");
+    rocket.className = "rocket";
+    rocket.style.left = x + "%";
+    rocket.style.setProperty("--target-y", targetY + "%");
+    rocket.style.setProperty("--duration", duration + "s");
 
-    for (let i = 0; i < 20; i++) {
+    container.appendChild(rocket);
+
+    setTimeout(() => {
+        explodeFirework(container, x, targetY);
+        rocket.remove();
+    }, duration * 1000);
+}
+
+function explodeFirework(container, x, targetY) {
+    // Sophisticated 'Jewel & Gold' palette
+    const palettes = [
+        ["#FFD700", "#FFA500", "#FF4500"], // Gold & Sunset
+        ["#00F5FF", "#00E5EE", "#7FFFD4"], // Cyan & Aquamarine
+        ["#FF00FF", "#DA70D6", "#BA55D3"], // Magenta & Orchid
+        ["#ADFF2F", "#32CD32", "#00FF7F"]  // Lime & Green
+    ];
+    const palette = palettes[Math.floor(Math.random() * palettes.length)];
+    const particleCount = 60;
+
+    for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement("div");
-        particle.className = "firework";
+        particle.className = "firework-particle";
+        const color = palette[Math.floor(Math.random() * palette.length)];
         particle.style.backgroundColor = color;
         particle.style.left = x + "%";
-        particle.style.top = y + "%";
+        particle.style.top = targetY + "%";
 
-        const angle = (Math.PI * 2 * i) / 20;
-        const velocity = Math.random() * 100 + 50;
+        // Sophisticated glow
+        particle.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+
+        const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
+        // Randomize velocity for a more 'natural' ragged edge explosion
+        const velocity = Math.random() * 250 + 100;
         const tx = Math.cos(angle) * velocity;
         const ty = Math.sin(angle) * velocity;
 
-        particle.style.setProperty('--tx', tx + 'px');
-        particle.style.setProperty('--ty', ty + 'px');
-        particle.style.animation = `fireworkExplode 1s ease-out forwards`;
+        particle.style.setProperty("--tx", tx + "px");
+        particle.style.setProperty("--ty", ty + "px");
+
+        // Randomize duration slightly for each particle
+        const duration = Math.random() * 0.6 + 1.2;
+        particle.style.animation = `fireworkExplode ${duration}s cubic-bezier(0, 0, 0.4, 1) forwards`;
 
         container.appendChild(particle);
-        setTimeout(() => particle.remove(), 1000);
+
+        if (Math.random() > 0.7) {
+            createSparkle(container, x + (tx / window.innerWidth * 100), targetY + (ty / window.innerHeight * 100));
+        }
+
+        setTimeout(() => particle.remove(), duration * 1000);
     }
+}
+
+function createSparkle(container, x, y) {
+    const sparkle = document.createElement("div");
+    sparkle.className = "sparkle";
+    sparkle.style.left = x + "%";
+    sparkle.style.top = y + "%";
+    sparkle.style.setProperty("--duration", (Math.random() * 0.5 + 0.5) + "s");
+
+    container.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 1000);
 }
 
 function startTimer() {

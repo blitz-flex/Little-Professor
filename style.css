@@ -433,6 +433,8 @@ h1 {
     align-items: center;
     gap: 1.5rem;
     text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .result-container h2 {
@@ -451,34 +453,102 @@ h1 {
     }
 }
 
-/* Fireworks and Confetti (preserved from old CSS but styled) */
+/* Improved Fireworks Celebration */
 .fireworks-container {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 100;
+    z-index: 5;
+    /* Above background */
 }
 
-.firework {
+/* Ensure content is above fireworks */
+.result-container>*:not(.fireworks-container) {
+    position: relative;
+    z-index: 10;
+}
+
+.firework-particle {
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: 3px;
+    height: 3px;
     border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.sparkle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle var(--duration) infinite;
 }
 
 @keyframes fireworkExplode {
     0% {
+        transform: translate(0, 0) scale(1.5);
         opacity: 1;
-        transform: translate(0, 0) scale(1);
+    }
+
+    30% {
+        opacity: 1;
+        filter: brightness(1.5);
     }
 
     100% {
+        /* Natural sag: particles slow down and fall slightly */
+        transform: translate(var(--tx), calc(var(--ty) + 50px)) scale(0);
         opacity: 0;
-        transform: translate(var(--tx), var(--ty)) scale(0);
     }
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes rocketUp {
+    0% {
+        top: 100%;
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        top: var(--target-y);
+        transform: scale(0.3);
+        opacity: 0;
+    }
+}
+
+.rocket {
+    position: absolute;
+    width: 4px;
+    height: 30px;
+    background: linear-gradient(to top, transparent, #fff, var(--secondary));
+    border-radius: 4px;
+    box-shadow: 0 0 15px var(--secondary);
+    filter: drop-shadow(0 0 10px white);
+    animation: rocketUp var(--duration) ease-out forwards;
 }
 
 /* Correct Answer Glow */
