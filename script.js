@@ -277,7 +277,7 @@ function endGame() {
     resultContainer.innerHTML = `
         <h2 class="${messageClass}">Game Over!</h2>
         <p class="subtitle">${message}</p>
-        <div class="stat-pill" style="min-width: 200px; margin: 1rem 0;">
+        <div class="stat-pill" style="min-width: 200px; margin: 1.5rem 0;">
             <span class="label">FINAL SCORE</span>
             <span class="value">${score} / 10 (${percentage}%)</span>
         </div>
@@ -408,18 +408,19 @@ function startTimer() {
 
 function initBackground() {
     const container = document.getElementById("symbols-container");
-    const symbols = ["+", "−", "×", "÷", "=", "∑", "π", "∞", "√"];
+    const symbols = ["+", "−", "×", "÷", "=", "∑", "π", "∞", "√", "∆", "∫", "≈", "≠", "λ", "μ", "θ"];
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 60; i++) {
         const symbol = document.createElement("div");
         symbol.className = "bg-symbol";
         symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
 
         symbol.style.left = Math.random() * 100 + "vw";
         symbol.style.top = Math.random() * 100 + "vh";
-        symbol.style.fontSize = Math.random() * 20 + 20 + "px";
-        symbol.style.animationDuration = Math.random() * 10 + 15 + "s";
-        symbol.style.animationDelay = Math.random() * -20 + "s";
+        symbol.style.fontSize = Math.random() * 20 + 15 + "px";
+        symbol.style.opacity = Math.random() * 0.5 + 0.1;
+        symbol.style.animationDuration = Math.random() * 20 + 10 + "s";
+        symbol.style.animationDelay = Math.random() * -30 + "s";
 
         container.appendChild(symbol);
     }

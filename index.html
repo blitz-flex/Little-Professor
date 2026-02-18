@@ -26,28 +26,24 @@
                     high-precision mathematical challenges.</p>
             </div>
 
-            <div class="level-selection">
-                <div class="levels-grid">
-                    <div class="level-card selected" onclick="selectLevel(1, this)" data-level="1">
-                        <div class="level-info">
+            <div class="selection-box">
+                <div class="level-selection">
+                    <h3>Select Rank</h3>
+                    <div class="levels-grid">
+                        <div class="level-card selected" onclick="selectLevel(1, this)" data-level="1">
                             <span class="level-name">Beginner</span>
                         </div>
-                    </div>
-                    <div class="level-card" onclick="selectLevel(2, this)" data-level="2">
-                        <div class="level-info">
+                        <div class="level-card" onclick="selectLevel(2, this)" data-level="2">
                             <span class="level-name">Intermediate</span>
                         </div>
-                    </div>
-                    <div class="level-card" onclick="selectLevel(3, this)" data-level="3">
-                        <div class="level-info">
+                        <div class="level-card" onclick="selectLevel(3, this)" data-level="3">
                             <span class="level-name">Professor</span>
                         </div>
                     </div>
                 </div>
                 <input type="hidden" id="level" value="1">
+                <button id="start-btn" class="primary-btn" onclick="startGame()">Start</button>
             </div>
-
-            <button id="start-btn" class="primary-btn" onclick="startGame()">Start Challenge</button>
         </div>
 
         <!-- Game Screen -->
