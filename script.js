@@ -3,6 +3,7 @@ let currentProblem;
 let currentAnswer;
 let currentAttempts = 0;
 let totalQuestions = 10;
+let maxQuestions = 10;
 let timeLeft = 60;
 let initialTime = 60;
 let timerInterval;
@@ -109,15 +110,19 @@ function startGame() {
         timeLeft = 60;
         currentMinNum = 0;
         currentMaxNum = 10;
+        totalQuestions = 10;
     } else if (level === 2) {
         timeLeft = 120;
         currentMinNum = 10;
         currentMaxNum = 20;
+        totalQuestions = 15;
     } else {
         timeLeft = 180;
         currentMinNum = 20;
         currentMaxNum = 30;
+        totalQuestions = 20;
     }
+    maxQuestions = totalQuestions;
     initialTime = timeLeft;
     initialMinNum = currentMinNum;
     initialMaxNum = currentMaxNum;
@@ -150,8 +155,8 @@ function generateProblem() {
     currentAttempts = 0;
     totalQuestions--;
 
-    const currentQuestionNumber = 10 - totalQuestions;
-    document.getElementById("question-num").textContent = `${currentQuestionNumber} / 10`;
+    const currentQuestionNumber = maxQuestions - totalQuestions;
+    document.getElementById("question-num").textContent = `${currentQuestionNumber} / ${maxQuestions}`;
 
     const problemElement = document.querySelector(".problem-text");
     problemElement.textContent = problem;
@@ -259,7 +264,7 @@ function endGame() {
 
     document.getElementById("game-screen").classList.remove("active");
 
-    const percentage = (score / 10) * 100;
+    const percentage = Math.round((score / maxQuestions) * 100);
     const resultContainer = document.createElement("div");
     resultContainer.className = "result-container screen active";
 
@@ -279,7 +284,7 @@ function endGame() {
         <p class="subtitle">${message}</p>
         <div class="stat-pill" style="min-width: 200px; margin: 1.5rem 0;">
             <span class="label">FINAL SCORE</span>
-            <span class="value">${score} / 10 (${percentage}%)</span>
+            <span class="value">${score} / ${maxQuestions} (${percentage}%)</span>
         </div>
         <button id="try-again" class="primary-btn">Try Again</button>
     `;
