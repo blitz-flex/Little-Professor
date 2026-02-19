@@ -29,8 +29,8 @@ const askedQuestions = new Set();
 
 // Difficulty → number ranges & operations
 function getDifficultyParams(d) {
-    // Clamp difficulty between 1 and 4
-    const stage = Math.min(4, Math.max(1, d));
+    // Progress to next stage every 2 correct answers
+    const stage = Math.min(4, Math.ceil(d / 2));
 
     let min, max, ops, compound;
 
@@ -45,7 +45,12 @@ function getDifficultyParams(d) {
             min = 2; max = 50; ops = ["+", "-", "*"]; compound = false;
             break;
         case 4: // Stage 4: Mastery (Division & Compound)
-            min = 5; max = 100; ops = ["+", "-", "*", "/"]; compound = true;
+            // Starts at base values, grows every step after d=6
+            const bonus = Math.max(0, d - 6);
+            min = 5 + Math.floor(bonus / 2);
+            max = 100 + bonus * 5;
+            ops = ["+", "-", "*", "/"];
+            compound = true;
             break;
     }
 
