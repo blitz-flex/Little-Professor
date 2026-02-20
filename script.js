@@ -23,38 +23,49 @@ let totalQuestions = 10;
 let difficulty = 5;   // current difficulty level (1–∞)
 let consecutiveMistakes = 0;   // streak of wrong answers
 let correctStreak = 0;   // counts consecutive correct answers
+let selectedRank = 1;     // 1: Beginner, 2: Intermediate, 3: Professor
 
 // Uniqueness guard: stores string keys of asked problems
 const askedQuestions = new Set();
 
 // Difficulty → number ranges & operations
 function getDifficultyParams(d) {
-    // Progress to next stage every 2 correct answers
-    const stage = Math.min(4, Math.ceil(d / 2));
+    // Current Level calculation (1-4)
+    // Progresses to next level every 2 correct answers
+    let stage = Math.min(4, Math.ceil(d / 2));
 
-    let min, max, ops, compound;
+    let min, max, ops, compound = false, triple = false;
+
+    // Rank Multiplier: Makes numbers larger based on selected rank
+    const mult = selectedRank;
 
     switch (stage) {
-        case 1: // Stage 1: Simple Addition
-            min = 0; max = 10; ops = ["+"]; compound = false;
+        case 1: // Stage 1 (Novice): Basic addition
+            min = 0;
+            max = 10 + (mult - 1) * 10; // Beginner: 10, Intermediate: 20, Professor: 30
+            ops = ["+"];
             break;
-        case 2: // Stage 2: Addition & Subtraction
-            min = 0; max = 20; ops = ["+", "-"]; compound = false;
+        case 2: // Stage 2 (Intermediate): Addition & Subtraction
+            min = 0;
+            max = 20 + (mult - 1) * 15; // Beginner: 20, Intermediate: 35, Professor: 50
+            ops = ["+", "-"];
             break;
-        case 3: // Stage 3: Multiplication & Larger Numbers
-            min = 2; max = 50; ops = ["+", "-", "*"]; compound = false;
+        case 3: // Stage 3 (Advanced): Multiplication and range boost
+            min = 2;
+            max = 30 + (mult - 1) * 20; // Beginner: 30, Intermediate: 50, Professor: 70
+            ops = ["+", "-", "*"];
             break;
-        case 4: // Stage 4: Mastery (Division & Compound)
-            // Starts at base values, grows every step after d=6
-            const bonus = Math.max(0, d - 6);
-            min = 5 + Math.floor(bonus / 2);
-            max = 100 + bonus * 5;
+        case 4: // Stage 4 (Mastery): Complex & Division
+            const bonus = Math.max(0, d - 8);
+            min = 5 + (mult - 1) * 5;
+            max = 50 + (mult - 1) * 25 + (bonus * 5); // Grows beyond 100 on Professor
             ops = ["+", "-", "*", "/"];
             compound = true;
+            triple = true; // Flag for level 4
             break;
     }
 
-    return { min, max, ops, compound };
+    return { min, max, ops, compound, triple, stageName: stage };
 }
 
 //  Random helpers
@@ -69,8 +80,12 @@ function pickFrom(arr) {
 // Problem generator
 // Returns { problem: string, answer: number } with answer > 0
 function buildProblem() {
-    const { min, max, ops, compound } = getDifficultyParams(difficulty);
+    const { min, max, ops, compound, triple } = getDifficultyParams(difficulty);
 
+    // Triple (three-step) for Level 4
+    if (triple && Math.random() < 0.6) {
+        return buildTripleProblem(min, max, ops);
+    }
     // Compound (two-step) problems at high difficulty
     if (compound && Math.random() < 0.45) {
         return buildCompoundProblem(min, max, ops);
@@ -156,6 +171,54 @@ function buildCompoundProblem(min, max, ops) {
     return buildSimpleProblem(min, max, ops);
 }
 
+function buildTripleProblem(min, max, ops) {
+    const MAX_TRIES = 200;
+    const safeOps = ops.filter(o => o !== "/");
+    for (let t = 0; t < MAX_TRIES; t++) {
+        const op1 = pickFrom(safeOps);
+        const op2 = pickFrom(safeOps);
+        const op3 = pickFrom(safeOps);
+        const cap = Math.min(max, 15);
+
+        let n1 = randInt(Math.max(1, min), cap);
+        let n2 = randInt(Math.max(1, min), cap);
+        let n3 = randInt(Math.max(1, min), cap);
+        let n4 = randInt(1, 10);
+
+        // Step 1: Calculate (n1 op1 n2)
+        let res1;
+        if (op1 === "+") res1 = n1 + n2;
+        else if (op1 === "-") {
+            if (n1 < n2) [n1, n2] = [n2, n1];
+            res1 = n1 - n2;
+        } else res1 = n1 * n2;
+
+        // Step 2: Calculate (res1 op2 n3)
+        let res2;
+        if (op2 === "+") res2 = res1 + n3;
+        else if (op2 === "-") {
+            if (res1 < n3) continue;
+            res2 = res1 - n3;
+        } else res2 = res1 * n3;
+
+        // Step 3: Calculate (res2 op3 n4)
+        let res3;
+        if (op3 === "+") res3 = res2 + n4;
+        else if (op3 === "-") {
+            if (res2 < n4) continue;
+            res3 = res2 - n4;
+        } else res3 = res2 * n4;
+
+        if (res3 > 0 && res3 < 500) {
+            const problem = `((${n1} ${op1} ${n2}) ${op2} ${n3}) ${op3} ${n4}`;
+            const key = `((${n1}${op1}${n2})${op2}${n3})${op3}${n4}`;
+            if (askedQuestions.has(key)) continue;
+            return { problem, answer: res3, key };
+        }
+    }
+    return buildCompoundProblem(min, max, ops);
+}
+
 //  Distractor generator (all positive)
 function generateOptions(correctAnswer) {
     const options = new Set([correctAnswer]);
@@ -198,6 +261,8 @@ function generateProblem() {
 
     // Display problem
     document.querySelector(".problem-text").textContent = problem;
+    const { stageName } = getDifficultyParams(difficulty);
+    document.getElementById("game-level").textContent = stageName;
 
     // Clear feedback
     const fb = document.querySelector(".feedback");
@@ -248,19 +313,14 @@ function submitAnswer(userAnswer) {
         clickedBtn.classList.add("correct");
         allBtns.forEach(b => { if (b !== clickedBtn) b.classList.add("dimmed"); });
 
-        // Blue glow for progression
-        document.querySelector(".problem-card").style.boxShadow =
-            "0 0 40px rgba(59, 130, 246, 0.4)";
-
         setTimeout(() => {
-            document.querySelector(".problem-card").style.boxShadow = "";
             generateProblem();
         }, 800);
 
     } else {
         // Wrong
-        // Mistake made: Progress resets to start
-        difficulty = 1;
+        // Mistake made: decrease difficulty by 1
+        difficulty = Math.max(1, difficulty - 1);
 
         clickedBtn.classList.add("wrong");
         correctBtn.classList.add("correct"); // show right answer
@@ -273,7 +333,6 @@ function submitAnswer(userAnswer) {
         }, 2000);
     }
 
-    document.getElementById("game-score").textContent = score;
 }
 
 // Start / End
@@ -292,16 +351,17 @@ function startGame() {
     askedQuestions.clear();
 
     const level = parseInt(document.getElementById("level").value);
+    selectedRank = level;
 
-    if (level === 1) {
+    if (level === 1) { // Beginner
         difficulty = 1;
         timeLeft = 60;
         maxQuestions = 15;
-    } else if (level === 2) {
+    } else if (level === 2) { // Intermediate
         difficulty = 1;
         timeLeft = 120;
         maxQuestions = 25;
-    } else {
+    } else { // Professor
         difficulty = 1;
         timeLeft = 180;
         maxQuestions = 35;
@@ -315,7 +375,8 @@ function startGame() {
     document.getElementById("game-screen").classList.add("active");
 
     // Reset UI
-    document.getElementById("game-score").textContent = "0";
+    const { stageName } = getDifficultyParams(difficulty);
+    document.getElementById("game-level").textContent = stageName;
     document.getElementById("time-left").textContent = timeLeft;
     document.getElementById("timer-bar").style.width = "100%";
     document.querySelector(".feedback").textContent = "";
@@ -342,9 +403,11 @@ function endGame() {
     resultContainer.innerHTML = `
         <h2 class="${msgClass}">Game Over!</h2>
         <p class="subtitle">${message}</p>
-        <div class="stat-pill" style="min-width: 200px; margin: 1.5rem 0;">
-            <span class="label">FINAL SCORE</span>
-            <span class="value">${score} / ${maxQuestions} (${percentage}%)</span>
+        <div class="stats-group" style="display: flex; flex-direction: column; align-items: center; gap: 1rem; margin: 1.5rem 0;">
+            <div class="stat-pill" style="min-width: 200px;">
+                <span class="label">FINAL SCORE</span>
+                <span class="value">${score} / ${maxQuestions}</span>
+            </div>
         </div>
         <button id="try-again" class="primary-btn">Try Again</button>
     `;
