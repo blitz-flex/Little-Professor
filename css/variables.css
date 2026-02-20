@@ -1,0 +1,15 @@
+/* Base Design System */
+:root {
+    --primary: #818cf8;
+    --primary-hover: #6366f1;
+    --secondary: #34d399;
+    --secondary-hover: #10b981;
+    --danger: #f87171;
+    --bg-dark: #020617;
+    --card-bg: rgba(15, 23, 42, 0.8);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}

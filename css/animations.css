@@ -1,0 +1,176 @@
+.bg-decoration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.bg-symbol {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.05);
+    font-family: var(--font-heading);
+    font-weight: 800;
+    user-select: none;
+    pointer-events: none;
+    animation: float-symbols 20s infinite linear;
+}
+
+@keyframes float-symbols {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.6;
+    }
+
+    90% {
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(-20vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    to {
+        background-position: 200% center;
+    }
+}
+
+.fireworks-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.result-container>*:not(.fireworks-container) {
+    position: relative;
+    z-index: 10;
+}
+
+.firework-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.sparkle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle var(--duration) infinite;
+}
+
+@keyframes fireworkExplode {
+    0% {
+        transform: translate(0, 0) scale(1.5);
+        opacity: 1;
+    }
+
+    30% {
+        opacity: 1;
+        filter: brightness(1.5);
+    }
+
+    100% {
+        transform: translate(var(--tx), calc(var(--ty) + 50px)) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes rocketUp {
+    0% {
+        top: 100%;
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        top: var(--target-y);
+        transform: scale(0.3);
+        opacity: 0;
+    }
+}
+
+.rocket {
+    position: absolute;
+    width: 4px;
+    height: 30px;
+    background: linear-gradient(to top, transparent, #fff, var(--secondary));
+    border-radius: 4px;
+    box-shadow: 0 0 15px var(--secondary);
+    filter: drop-shadow(0 0 10px white);
+    animation: rocketUp var(--duration) ease-out forwards;
+}

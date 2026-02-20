@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/main.css" />
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
@@ -30,19 +30,19 @@
                 <div class="level-selection">
                     <h3>Select Rank</h3>
                     <div class="levels-grid">
-                        <div class="level-card selected" onclick="selectLevel(1, this)" data-level="1">
+                        <div class="level-card selected" data-level="1">
                             <span class="level-name">Beginner</span>
                         </div>
-                        <div class="level-card" onclick="selectLevel(2, this)" data-level="2">
+                        <div class="level-card" data-level="2">
                             <span class="level-name">Intermediate</span>
                         </div>
-                        <div class="level-card" onclick="selectLevel(3, this)" data-level="3">
+                        <div class="level-card" data-level="3">
                             <span class="level-name">Professor</span>
                         </div>
                     </div>
                 </div>
                 <input type="hidden" id="level" value="1">
-                <button id="start-btn" class="primary-btn" onclick="startGame()">Start</button>
+                <button id="start-btn" class="primary-btn">Start</button>
             </div>
         </div>
 
@@ -82,7 +82,7 @@
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <script type="module" src="js/game.js"></script>
 </body>
 
 </html>

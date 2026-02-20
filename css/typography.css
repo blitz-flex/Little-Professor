@@ -1,0 +1,22 @@
+h1 {
+    font-family: var(--font-heading);
+    font-size: 2.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 0 auto 0.75rem;
+    color: #ffffff;
+    max-width: 340px;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    max-width: 340px;
+    line-height: 1.5;
+    margin: 0 auto 1.5rem;
+}
+
+.shimmer-text {
+    color: var(--secondary);
+    font-weight: 800;
+}

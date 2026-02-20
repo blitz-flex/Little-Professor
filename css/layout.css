@@ -1,0 +1,60 @@
+.app-container {
+    width: 100%;
+    max-width: 500px;
+    margin: auto 0;
+    z-index: 10;
+    position: relative;
+}
+
+.screen {
+    display: none;
+    flex-direction: column;
+    gap: 2rem;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.screen.active {
+    display: flex;
+}
+
+.hero-content {
+    text-align: center;
+}
+
+.selection-box {
+    background: rgba(255, 255, 255, 0.015);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 28px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.25rem;
+    }
+
+    .problem-text {
+        font-size: 2.5rem;
+    }
+}
