@@ -1,6 +1,6 @@
 # 🧮 Little Professor: Level Up Your Math Skills!
 
-![Little Professor Gameplay](https://i.imgur.com/d4uXGyj.png)
+![Little Professor Gameplay](https://i.imgur.com/cnzQLpS.png)
 
 Little Professor is an addictive, fast-paced educational web game that transforms mental math practice into an exciting
 challenge. Designed with an adaptive difficulty engine, it tests your arithmetic skills and progressively scales the complexity to keep your brain sharp.

@@ -34,7 +34,7 @@
     box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 340px;
-    margin: 0 auto;
+    margin: -0.5rem auto 0;
 }
 
 .game-header {
