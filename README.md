@@ -2,36 +2,33 @@
 
 ![Little Professor Gameplay](https://i.imgur.com/HCPeQ3L.png)
 
-Little Professor is an addictive educational game that transforms boring math practice into an exciting challenge. Whether you're 8 or 80, get ready to sharpen your arithmetic skills and compete against yourself to reach the highest score!
+Little Professor is an addictive, fast-paced educational web game that transforms mental math practice into an exciting
+challenge. Designed with an adaptive difficulty engine, it tests your arithmetic skills and progressively scales the complexity to keep your brain sharp.
 
-##  **Why You'll Love It**
-
-*   **Adaptive Intelligence** - The game logic evolves in real-time based on your performance.
-*   **Multiple Choice UI** - Fast-paced A, B, C, D buttons designed for quick thinking and mobile play.
-*   **Tiered Progression** - Unlock Multiplication, Division, and Complex Problems as you build your streak.
-*   **Performance Tracking** - Instant feedback and dynamic range scaling (it gets harder on every correct answer!).
+##  **Key Features**
+*   **Adaptive Intelligence** - The game logic evolves in real-time based on your performance. As you build a streak, the problems get harder.
+*   **Modern Interactive UI** - Fast-paced multiple-choice buttons (A, B, C, D) wrapped in a clean, glassmorphic design for an immersive experience.
+*   **Tiered Progression** - Smoothly transition from basic addition to unlocking multiplication, division, and complex multi-operand challenges.
+*   **Detailed Performance Tracking** - Instant feedback on answers, dynamic timers, and an end-game analytics screen that displays your final score and accuracy percentage.
 
 ## **How It Works**
 
-*   **Pick Your Level** - Start with base ranges (0-10, 10-20, or 20-30).
-*   **Build Your Streak** - Every 2 correct answers advance your **Complexity Tier**.
+*   **Pick Your Rank** - Choose your starting base range (Beginner, Intermediate, or Professor).
+*   **Build Your Streak** - Every correct answer gradually advances your **Complexity Tier**.
 *   **Master the Tiers**:
-    *   **Tier 0-1**: Basic Addition & Subtraction.
-    *   **Tier 2**: Multiplication & Division unlock.
-    *   **Tier 3+**: Advanced problems with three operands!
-
+    *   **Tier 1-2**: Basic Addition & Subtraction.
+    *   **Tier 3**: Multiplication & Division unlock.
+    *   **Tier 4**: Advanced problems with three operands!
 
 ## **Game Modes**
 
-| Level | Number Range | Best For |
+| Rank | Number Range | Strategy |
 |-------|-------|----------|
-| **Level 1** | 0-10  | Beginners & young learners |
-| **Level 2** | 10-20 | Building confidence & speed |
-| **Level 3** | 20-30 | Advanced arithmetic & challenge seekers |
+| **Beginner** | 0 - 10  | Perfect for warmups and young learners. Focuses on straightforward logic. |
+| **Intermediate** | 10 - 20 | Builds confidence and speed with higher variables. |
+| **Professor** | 20 - 30+ | Rapid, complex arithmetic for challenge seekers. |
 
-
-
-##  **Run Locally**
+## **Run Locally**
 
 Clone the project and open `index.html` in your browser. No build step required!
 
@@ -43,6 +40,8 @@ cd little-professor
 
 ## **Built With**
 
-Pure HTML, CSS, and JavaScript – No frameworks, just fast, fun, and smart gameplay.
+*   **Vanilla JavaScript (ES6 Modules)** for logic and state management.
+*   **HTML5 & CSS3** for structure and modern UI styling (flexbox, CSS variables, animations).
+*   Zero external dependencies or heavy frameworks.
 
 ## 🎮 **[Start Playing Now](https://little-profesor.netlify.app/)**
