@@ -12,8 +12,13 @@ export const ui = {
         appContainer: document.querySelector(".app-container"),
         levelCards: document.querySelectorAll(".level-card")
     },
+    formatTime: (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    },
     updateTimer: (timeLeft, initialTime) => {
-        if (ui.elements.timeLeft) ui.elements.timeLeft.textContent = timeLeft;
+        if (ui.elements.timeLeft) ui.elements.timeLeft.textContent = ui.formatTime(timeLeft);
         if (ui.elements.timerBar) ui.elements.timerBar.style.width = `${(timeLeft / initialTime) * 100}%`;
     },
     updateHeader: (currentIdx, maxQuestions, stageName) => {

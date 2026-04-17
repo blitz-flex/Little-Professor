@@ -44,7 +44,7 @@ function handleAnswerSubmit(userAnswer) {
         setTimeout(() => generateNextProblem(), 800);
     } else {
         state.difficulty = Math.max(1, state.difficulty - 1);
-        setTimeout(() => generateNextProblem(), 2000);
+        setTimeout(() => generateNextProblem(), 1200);
     }
 }
 
