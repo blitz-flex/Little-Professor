@@ -19,7 +19,14 @@ export const ui = {
     },
     updateTimer: (timeLeft, initialTime) => {
         if (ui.elements.timeLeft) ui.elements.timeLeft.textContent = ui.formatTime(timeLeft);
-        if (ui.elements.timerBar) ui.elements.timerBar.style.width = `${(timeLeft / initialTime) * 100}%`;
+        if (ui.elements.timerBar) {
+            ui.elements.timerBar.style.width = `${(timeLeft / initialTime) * 100}%`;
+            if (timeLeft <= 10 && timeLeft > 0) {
+                ui.elements.timerBar.classList.add("danger");
+            } else {
+                ui.elements.timerBar.classList.remove("danger");
+            }
+        }
     },
     updateHeader: (currentIdx, maxQuestions, stageName) => {
         if (ui.elements.questionNum) ui.elements.questionNum.textContent = `${currentIdx} / ${maxQuestions}`;
@@ -74,7 +81,7 @@ export const ui = {
         if (ui.elements.startScreen) ui.elements.startScreen.classList.remove("active");
         if (ui.elements.gameScreen) ui.elements.gameScreen.classList.add("active");
     },
-    showEndScreen: (score, maxQuestions, percentage, message, msgClass, onTryAgain) => {
+    showEndScreen: (score, maxQuestions, percentage, message, msgClass, isNewHighScore, weakestOpText, onTryAgain) => {
         if (ui.elements.gameScreen) ui.elements.gameScreen.classList.remove("active");
 
         const resultContainer = document.createElement("div");
@@ -82,6 +89,7 @@ export const ui = {
         resultContainer.innerHTML = `
             <h2 class="${msgClass}">Game Over!</h2>
             <p class="subtitle">${message}</p>
+            ${isNewHighScore ? '<div style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 5px 15px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; margin-top: -10px; animation: bounce 2s infinite;">🏆 NEW HIGH SCORE! 🏆</div>' : ''}
             <div class="stats-group" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin: 2rem 0;">
                 <div style="position: relative; width: 140px; height: 140px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(129, 140, 248, 0.15) 0%, rgba(15, 23, 42, 0) 70%); border: 2px dashed rgba(129, 140, 248, 0.4); box-shadow: 0 0 30px rgba(129, 140, 248, 0.2), inset 0 0 20px rgba(129, 140, 248, 0.1); animation: pulse 2s infinite ease-in-out;">
                     <span style="font-family: var(--font-heading); font-size: 3.5rem; font-weight: 800; color: #fff; text-shadow: 0 0 15px rgba(129, 140, 248, 0.6); line-height: 1;">${score}</span>
@@ -92,6 +100,12 @@ export const ui = {
                     <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.15em;">ACCURACY RATE</span>
                     <div style="height: 18px; width: 1px; background: rgba(255, 255, 255, 0.15);"></div>
                     <span style="color: var(--primary); font-family: var(--font-heading); font-size: 1.35rem; font-weight: 800; text-shadow: 0 0 12px rgba(129, 140, 248, 0.5);">${percentage}%</span>
+                </div>
+
+                <div style="background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.8rem 1.5rem; border-radius: 100px; display: flex; align-items: center; gap: 1.25rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);">
+                    <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.15em;">WEAKEST OPERATION</span>
+                    <div style="height: 18px; width: 1px; background: rgba(255, 255, 255, 0.15);"></div>
+                    <span style="color: #f87171; font-family: var(--font-heading); font-size: 1.35rem; font-weight: 800; text-shadow: 0 0 12px rgba(248, 113, 113, 0.5);">${weakestOpText}</span>
                 </div>
             </div>
             <button id="try-again" class="primary-btn">Try Again</button>
@@ -115,5 +129,13 @@ export const ui = {
         if (!ui.elements.levelCards) return;
         ui.elements.levelCards.forEach(c => c.classList.remove("selected"));
         element.classList.add("selected");
+    },
+    renderHighScores: (scores) => {
+        const hs1 = document.getElementById("hs-1");
+        const hs2 = document.getElementById("hs-2");
+        const hs3 = document.getElementById("hs-3");
+        if (hs1) hs1.textContent = scores[1] || 0;
+        if (hs2) hs2.textContent = scores[2] || 0;
+        if (hs3) hs3.textContent = scores[3] || 0;
     }
 };

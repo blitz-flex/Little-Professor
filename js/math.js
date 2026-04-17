@@ -12,7 +12,7 @@ export function pickFrom(arr) {
 
 export function getDifficultyParams(d) {
     // Difficulty Cap: Prevent infinite difficulty scaling
-    const cappedD = Math.min(15, d); 
+    const cappedD = Math.min(15, d);
     const stage = Math.min(4, Math.ceil(cappedD / 2));
     const mult = state.selectedRank || 1;
 
@@ -59,7 +59,7 @@ export function buildProblem() {
 function buildSimpleProblem(min, max, ops) {
     const MAX_TRIES = 50;
     const mult = state.selectedRank || 1;
-    
+
     for (let t = 0; t < MAX_TRIES; t++) {
         let op = pickFrom(ops);
         let a = randInt(min, max);
@@ -86,21 +86,22 @@ function buildSimpleProblem(min, max, ops) {
         }
 
         if (answer < 0) continue;
-        
+
         const key = `${a}${op}${b}`;
         if (state.askedQuestions.has(key)) continue;
 
-        return { problem: `${a} ${op} ${b}`, answer, key };
+        return { problem: `${a} ${op} ${b}`, answer, key, op };
     }
-    
+
     // If many questions are asked and repeat, clear memory with a better fallback
     if (state.askedQuestions.size > 50) state.askedQuestions.clear();
     const fallbackA = randInt(min, max);
     const fallbackB = randInt(min, max);
-    return { 
-        problem: `${fallbackA} + ${fallbackB}`, 
-        answer: fallbackA + fallbackB, 
-        key: `${fallbackA}+${fallbackB}_${Date.now()}` 
+    return {
+        problem: `${fallbackA} + ${fallbackB}`,
+        answer: fallbackA + fallbackB,
+        key: `${fallbackA}+${fallbackB}_${Date.now()}`,
+        op: "+"
     };
 }
 
@@ -135,7 +136,7 @@ function buildCompoundProblem(min, max, ops) {
         const problem = `(${n1} ${op1} ${n2}) ${op2} ${n3}`;
         if (state.askedQuestions.has(problem)) continue;
 
-        return { problem, answer, key: problem };
+        return { problem, answer, key: problem, op: "Compound" };
     }
     return buildSimpleProblem(min, max, ops);
 }
@@ -166,7 +167,7 @@ function buildTripleProblem(min, max, ops) {
         if (res3 > 0 && res3 < 1000) {
             const problem = `((${n1} ${op1} ${n2}) ${op2} ${n3}) ${op3} ${n4}`;
             if (state.askedQuestions.has(problem)) continue;
-            return { problem, answer: res3, key: problem };
+            return { problem, answer: res3, key: problem, op: "Complex" };
         }
     }
     return buildCompoundProblem(min, max, ops);
@@ -174,7 +175,7 @@ function buildTripleProblem(min, max, ops) {
 
 export function generateOptions(correctAnswer) {
     const options = new Set([correctAnswer]);
-    
+
     // Generating plausible answer options
     while (options.size < 4) {
         let offset;
@@ -183,7 +184,7 @@ export function generateOptions(correctAnswer) {
         if (rand < 0.4) offset = randInt(1, 2);
         else if (rand < 0.7) offset = 10;
         else offset = randInt(3, 8);
-        
+
         const candidate = Math.random() < 0.5 ? correctAnswer + offset : correctAnswer - offset;
         if (candidate >= 0) options.add(candidate); // Excluding negative answers
     }

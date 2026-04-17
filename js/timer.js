@@ -1,11 +1,12 @@
 import { state } from './state.js';
-
+import { sfx } from './audio.js';
 export const timer = {
     start: (onTick, onEnd) => {
         if (state.timerInterval) clearInterval(state.timerInterval);
         state.timerInterval = setInterval(() => {
             state.timeLeft--;
             if (onTick) onTick(state.timeLeft, state.initialTime);
+            if (state.timeLeft <= 10 && state.timeLeft > 0) sfx.playTick();
             if (state.timeLeft <= 0) {
                 clearInterval(state.timerInterval);
                 if (onEnd) onEnd();
