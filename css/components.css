@@ -1,9 +1,11 @@
 .logo-badge {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1.2rem;
     display: inline-block;
-    filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.5));
+    filter: drop-shadow(0 0 25px rgba(99, 102, 241, 0.6));
     animation: bounce 2s infinite ease-in-out;
+    object-fit: contain;
 }
 
 .level-selection h3 {
@@ -23,13 +25,13 @@
 }
 
 .level-card {
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    border-radius: 14px;
-    padding: 0.9rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    padding: 1rem 1.25rem;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -79,22 +81,50 @@
 }
 
 .high-score-badge {
-    position: absolute;
-    bottom: 8px;
-    right: 12px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.4);
-    letter-spacing: 0.1em;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 2px 6px;
-    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.15);
+    padding: 6px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.badge-icon {
+    font-size: 0.8rem;
+    filter: grayscale(1) opacity(0.5);
     transition: all 0.3s ease;
 }
 
+.badge-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.6rem;
+    font-weight: 800;
+}
+
+.badge-value {
+    color: rgba(255, 255, 255, 0.5);
+}
+
 .level-card.selected .high-score-badge {
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(var(--lvl-rgb), 0.3);
+    color: white;
+    background: rgba(var(--lvl-rgb), 0.2);
+    border-color: rgba(var(--lvl-rgb), 0.3);
+    box-shadow: 0 4px 12px rgba(var(--lvl-rgb), 0.2);
+}
+
+.level-card.selected .badge-icon {
+    filter: grayscale(0) opacity(1);
+    transform: scale(1.1);
+}
+
+.level-card.selected .badge-value {
+    color: white;
 }
 
 .primary-btn {

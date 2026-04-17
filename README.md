@@ -7,9 +7,9 @@ challenge. Designed with an adaptive difficulty engine, it tests your arithmetic
 
 ##  **Key Features**
 *   **Adaptive Intelligence** - The game logic evolves in real-time based on your performance. As you build a streak, the problems get harder.
-*   **Modern Interactive UI** - Fast-paced multiple-choice buttons (A, B, C, D) wrapped in a clean, glassmorphic design for an immersive experience.
-*   **Tiered Progression** - Smoothly transition from basic addition to unlocking multiplication, division, and complex multi-operand challenges.
-*   **Detailed Performance Tracking** - Instant feedback on answers, dynamic timers, and an end-game analytics screen that displays your final score and accuracy percentage.
+*   **Persistent High Scores** - Automatically tracks and displays your best performance for each rank with a premium star-badge UI.
+*   **Modern Interactive UI** - Fast-paced multiple-choice buttons wrapped in a clean, glassmorphic design with smooth transitions and an optimized layout.
+*   **Detailed Performance Tracking** - Instant feedback, dynamic timers, and an end-game analytics screen displaying your final score, accuracy, and weakest operations.
 
 ## **How It Works**
 
@@ -22,11 +22,11 @@ challenge. Designed with an adaptive difficulty engine, it tests your arithmetic
 
 ## **Game Modes**
 
-| Rank | Number Range | Strategy |
-|-------|-------|----------|
-| **Beginner** | 0 - 10  | Perfect for warmups and young learners. Focuses on straightforward logic. |
-| **Intermediate** | 10 - 20 | Builds confidence and speed with higher variables. |
-| **Professor** | 20 - 30+ | Rapid, complex arithmetic for challenge seekers. |
+| Rank | Strategy |
+|-------|-------|
+| **Beginner** | Perfect for warmups and young learners. Focuses on straightforward logic. |
+| **Intermediate** | Builds confidence and speed with higher variables. |
+| **Professor** |Rapid, complex arithmetic for challenge seekers. |
 
 ## **Run Locally**
 
@@ -40,8 +40,8 @@ cd little-professor
 
 ## **Built With**
 
-*   **Vanilla JavaScript (ES6 Modules)** for logic and state management.
-*   **HTML5 & CSS3** for structure and modern UI styling (flexbox, CSS variables, animations).
-*   Zero external dependencies or heavy frameworks.
+*   **Vanilla JavaScript (ES6 Modules)** - Core logic, state management, and real-time difficulty scaling.
+*   **CSS3 Modern Architecture** - Modular CSS with variables, flexbox/grid layouts, and optimized animations.
+*   **Zero Dependencies** - Pure, high-performance web development with no external frameworks or libraries.
 
 ## 🎮 **[Start Playing Now](https://little-profesor.netlify.app/)**
