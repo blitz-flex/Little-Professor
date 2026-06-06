@@ -1,11 +1,14 @@
+import { getTierInfo } from './math.js';
+
 export const ui = {
     elements: {
         timerBar: document.getElementById("timer-bar"),
         timeLeft: document.getElementById("time-left"),
         questionNum: document.getElementById("question-num"),
-        gameLevel: document.getElementById("game-level"),
+        tierPill: document.getElementById("tier-pill"),
+        tierName: document.getElementById("tier-name"),
+        tierIntensity: document.getElementById("tier-intensity"),
         problemText: document.querySelector(".problem-text"),
-        feedback: document.querySelector(".feedback"),
         optionsContainer: document.getElementById("options-container"),
         startScreen: document.getElementById("start-screen"),
         gameScreen: document.getElementById("game-screen"),
@@ -28,16 +31,44 @@ export const ui = {
             }
         }
     },
-    updateHeader: (currentIdx, maxQuestions, stageName) => {
+    renderTier: (difficulty) => {
+        const { tier, name, progress } = getTierInfo(difficulty);
+        const fillPct = Math.round(progress * 100);
+
+        if (ui.elements.tierName) ui.elements.tierName.textContent = name;
+        if (ui.elements.tierPill) {
+            ui.elements.tierPill.className = `stat-pill tier-pill tier-${tier}`;
+        }
+        if (ui.elements.tierIntensity) {
+            ui.elements.tierIntensity.querySelectorAll('.tier-seg').forEach((seg, i) => {
+                const tierIndex = i + 1;
+                const fill = seg.querySelector('.tier-seg-fill');
+                seg.classList.remove('active', 'current', 'completed');
+                seg.removeAttribute('data-tier');
+
+                if (tierIndex < tier) {
+                    seg.classList.add('active', 'completed');
+                    seg.dataset.tier = String(tierIndex);
+                    if (fill) fill.style.width = '100%';
+                } else if (tierIndex === tier) {
+                    if (fillPct > 0) {
+                        seg.classList.add('active', 'current');
+                        if (fill) fill.style.width = `${fillPct}%`;
+                    } else if (fill) {
+                        fill.style.width = '0%';
+                    }
+                } else if (fill) {
+                    fill.style.width = '0%';
+                }
+            });
+        }
+    },
+    updateHeader: (currentIdx, maxQuestions, difficulty) => {
         if (ui.elements.questionNum) ui.elements.questionNum.textContent = `${currentIdx} / ${maxQuestions}`;
-        if (ui.elements.gameLevel) ui.elements.gameLevel.textContent = stageName;
+        ui.renderTier(difficulty);
     },
     renderProblem: (problemStr) => {
         if (ui.elements.problemText) ui.elements.problemText.textContent = problemStr;
-        if (ui.elements.feedback) {
-            ui.elements.feedback.textContent = "";
-            ui.elements.feedback.className = "feedback";
-        }
     },
     renderOptions: (options, labels, onSelect) => {
         const container = ui.elements.optionsContainer;
@@ -89,9 +120,9 @@ export const ui = {
         resultContainer.innerHTML = `
             <h2 class="${msgClass}">Game Over!</h2>
             <p class="subtitle">${message}</p>
-            ${isNewHighScore ? '<div style="background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 5px 15px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; margin-top: -10px; animation: bounce 2s infinite;">🏆 NEW HIGH SCORE! 🏆</div>' : ''}
+            ${isNewHighScore ? '<div class="high-score-banner">🏆 NEW HIGH SCORE! 🏆</div>' : ''}
             <div class="stats-group" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin: 2rem 0;">
-                <div style="position: relative; width: 140px; height: 140px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(129, 140, 248, 0.15) 0%, rgba(15, 23, 42, 0) 70%); border: 2px dashed rgba(129, 140, 248, 0.4); box-shadow: 0 0 30px rgba(129, 140, 248, 0.2), inset 0 0 20px rgba(129, 140, 248, 0.1); animation: pulse 2s infinite ease-in-out;">
+                <div class="score-ring">
                     <span style="font-family: var(--font-heading); font-size: 3.5rem; font-weight: 800; color: #fff; text-shadow: 0 0 15px rgba(129, 140, 248, 0.6); line-height: 1;">${score}</span>
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 5px;">OUT OF ${maxQuestions}</span>
                 </div>
@@ -117,8 +148,6 @@ export const ui = {
             if (fw) fw.remove();
             if (ui.elements.startScreen) ui.elements.startScreen.classList.add("active");
 
-            // Re-bind dynamic elements like level selection reset inside onTryAgain?
-            // Usually we just show start screen.
             if (onTryAgain) onTryAgain();
         });
 

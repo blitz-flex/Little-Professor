@@ -2,7 +2,8 @@ export const state = {
     score: 0,
     currentAnswer: null,
     currentProblem: "",
-    currentOp: "", // Track current operator
+    currentOp: "",
+    currentOpsUsed: [],
     timeLeft: 60,
     initialTime: 60,
     timerInterval: null,
@@ -11,12 +12,22 @@ export const state = {
     maxQuestions: 15,
     totalQuestions: 15,
     difficulty: 1,
-    consecutiveMistakes: 0,
     selectedRank: 1,
     askedQuestions: new Set(),
     mistakesByOp: { "+": 0, "-": 0, "*": 0, "/": 0 },
     highScores: JSON.parse(localStorage.getItem('little-professor-highscores')) || { 1: 0, 2: 0, 3: 0 }
 };
+
+const TRACKED_OPS = ["+", "-", "*", "/"];
+
+export function recordMistakes(mistakesByOp, opsUsed) {
+    const ops = opsUsed?.length ? opsUsed : [];
+    for (const op of ops) {
+        if (TRACKED_OPS.includes(op)) {
+            mistakesByOp[op] = (mistakesByOp[op] || 0) + 1;
+        }
+    }
+}
 
 export function saveHighScore(rank, score) {
     if (score > state.highScores[rank]) {
@@ -31,7 +42,6 @@ export function resetGameState(levelParams) {
     state.score = 0;
     state.gameEnded = false;
     state.isSubmitting = false;
-    state.consecutiveMistakes = 0;
     state.askedQuestions.clear();
     state.selectedRank = levelParams.rank;
     state.difficulty = 1;
@@ -41,5 +51,5 @@ export function resetGameState(levelParams) {
     state.totalQuestions = levelParams.questions;
     state.mistakesByOp = { "+": 0, "-": 0, "*": 0, "/": 0 };
     state.currentOp = "";
+    state.currentOpsUsed = [];
 }
-

@@ -68,9 +68,15 @@
                     <span class="label">QUESTION</span>
                     <span id="question-num" class="value">1 / 10</span>
                 </div>
-                <div class="stat-pill">
-                    <span class="label">LEVEL</span>
-                    <span id="game-level" class="value">1</span>
+                <div class="stat-pill tier-pill tier-1" id="tier-pill">
+                    <span class="label">TIER</span>
+                    <span id="tier-name" class="tier-name">Warmup</span>
+                    <div class="tier-intensity" id="tier-intensity" aria-hidden="true">
+                        <span class="tier-seg"><span class="tier-seg-fill"></span></span>
+                        <span class="tier-seg"><span class="tier-seg-fill"></span></span>
+                        <span class="tier-seg"><span class="tier-seg-fill"></span></span>
+                        <span class="tier-seg"><span class="tier-seg-fill"></span></span>
+                    </div>
                 </div>
             </div>
 
@@ -80,10 +86,6 @@
                 </div>
 
                 <div id="options-container" class="options-grid"></div>
-
-                <div class="feedback-area">
-                    <div class="feedback"></div>
-                </div>
             </div>
 
             <div class="game-footer">

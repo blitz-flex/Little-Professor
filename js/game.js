@@ -1,5 +1,10 @@
-import { state, resetGameState, saveHighScore } from './state.js';
-import { getDifficultyParams, buildProblem, generateOptions } from './math.js';
+import { state, resetGameState, saveHighScore, recordMistakes } from './state.js';
+import {
+    buildProblem,
+    generateOptions,
+    computeDifficultyDelta,
+    clampDifficulty,
+} from './math.js';
 import { ui } from './ui.js';
 import { timer } from './timer.js';
 import { initBackground, launchFireworks } from './effects.js';
@@ -16,12 +21,12 @@ function generateNextProblem() {
     state.currentProblem = problemData.problem;
     state.currentAnswer = problemData.answer;
     state.currentOp = problemData.op;
+    state.currentOpsUsed = problemData.opsUsed;
     state.totalQuestions--;
 
     const currentIdx = state.maxQuestions - state.totalQuestions;
-    const { stageName } = getDifficultyParams(state.difficulty);
 
-    ui.updateHeader(currentIdx, state.maxQuestions, stageName);
+    ui.updateHeader(currentIdx, state.maxQuestions, state.difficulty);
     ui.renderProblem(state.currentProblem);
 
     const opts = generateOptions(state.currentAnswer);
@@ -38,17 +43,21 @@ function handleAnswerSubmit(userAnswer) {
     ui.disableOptions();
     ui.markAnswerEffect(userAnswer, state.currentAnswer);
 
-    if (userAnswer === state.currentAnswer) {
+    const isCorrect = userAnswer === state.currentAnswer;
+
+    if (isCorrect) {
         sfx.playCorrect();
         state.score++;
-        state.difficulty++;
+        const delta = computeDifficultyDelta(true);
+        state.difficulty = clampDifficulty(state.difficulty + delta);
+        ui.renderTier(state.difficulty);
         setTimeout(() => generateNextProblem(), 800);
     } else {
         sfx.playWrong();
-        state.difficulty = Math.max(1, state.difficulty - 1);
-        if (state.currentOp) {
-            state.mistakesByOp[state.currentOp] = (state.mistakesByOp[state.currentOp] || 0) + 1;
-        }
+        const delta = computeDifficultyDelta(false);
+        state.difficulty = clampDifficulty(state.difficulty + delta);
+        ui.renderTier(state.difficulty);
+        recordMistakes(state.mistakesByOp, state.currentOpsUsed);
         setTimeout(() => generateNextProblem(), 1200);
     }
 }

@@ -28,15 +28,6 @@ challenge. Designed with an adaptive difficulty engine, it tests your arithmetic
 | **Intermediate** | Builds confidence and speed with higher variables. |
 | **Professor** |Rapid, complex arithmetic for challenge seekers. |
 
-## **Run Locally**
-
-Clone the project and open `index.html` in your browser. No build step required!
-
-```bash
-git clone https://github.com/yourusername/little-professor.git
-cd little-professor
-# Open index.html in your preferred browser
-```
 
 ## **Built With**
 
